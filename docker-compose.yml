@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/opt/services/backend/src
+    ports:
+      - 8080:8080
