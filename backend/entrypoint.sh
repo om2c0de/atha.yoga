@@ -1,0 +1,1 @@
+gunicorn --chdir atha_yoga --bind :8080 atha_yoga.wsgi:application

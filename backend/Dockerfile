@@ -14,4 +14,4 @@ COPY . ${PROJECT_DIR}
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--chdir", "atha_yoga", "--bind", ":8080", "atha_yoga.wsgi:application"]a
+ENTRYPOINT ["/bin/bash",  "entrypoint.sh"]
