@@ -1,17 +1,19 @@
-FROM python:3.6-stretch
+FROM python:3.8.3-alpine
 
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 
-RUN apt update && apt install -y python3-dev
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev
 
-WORKDIR /code
+WORKDIR /usr/src/app
 
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+#COPY ../requirements.txt /code/
+#RUN pip install -r requirements.txt
 
 
-COPY yoga /code/
+COPY yoga/yoga /code/
 WORKDIR /code/
 
 EXPOSE 8000
