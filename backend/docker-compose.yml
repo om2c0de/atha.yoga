@@ -1,26 +1,15 @@
 services:
   backend:
     container_name: backend
-    env_file:
-      - .env
-    environment:
-      POSTGRES_NAME: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    build:
-      context: .
-    volumes:
-      - .:/backend/atha_yoga
+    env_file: .env
+    build: .
     ports:
       - "8000:8000"
     depends_on:
       - db
   db:
     image: postgres
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    env_file: .env
     container_name: db
     volumes:
       - db:/var/lib/postgresql/data
