@@ -2,3 +2,5 @@
 .idea/
 .DS_Store
 frontend/node_modules
+_pycache__/
+backend/.env
