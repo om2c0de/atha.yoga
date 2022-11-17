@@ -4,3 +4,4 @@
 frontend/node_modules
 _pycache__/
 backend/.env
+backend/venv
