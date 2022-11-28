@@ -32,10 +32,10 @@ load_dotenv(DOTENV_DEFAULT_CONFIG, override=True)
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "value does not exist")
+SECRET_KEY = os.getenv("SECRET_KEY", "Value does not exist")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DEBUG", False))
+DEBUG = (os.getenv("DEBUG", "False").capitalize() == 'True')
 
 ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
