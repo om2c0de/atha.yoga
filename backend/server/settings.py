@@ -35,7 +35,7 @@ load_dotenv(DOTENV_DEFAULT_CONFIG, override=True)
 SECRET_KEY = os.getenv("SECRET_KEY", "Value does not exist")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.getenv("DEBUG", "False").capitalize() == 'True')
+DEBUG = (os.getenv("DEBUG", "False").capitalize() == "True")
 
 ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
