@@ -9,12 +9,15 @@ from core.app.http.requests.profile_requests import UserProfileRequest
 from core.app.services.create_profile_photo import create_profile_photo_from_file
 
 
+@permission_classes([IsAuthenticated])
 class UserProfilePhotoHandler(GenericAPIView):
-    serialzer_class = UserProfileRequest
+    serializer_class = UserProfileRequest
 
-    @permission_classes([IsAuthenticated])
     def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        image = request.FILES['profile_photo']
-        profile_photo = create_profile_photo_from_file(image)
+        data = self.serializer_class(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        profile_photo = create_profile_photo_from_file(data.validated_data["profile_photo"])
         profile_photo.save(fp="media/user_profile_foto/" + str(request.user) + ".png")
+        print(request.user)
         return Response("Successfully uploaded a new avatar.")
