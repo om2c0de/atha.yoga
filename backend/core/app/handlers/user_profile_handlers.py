@@ -19,5 +19,4 @@ class UserProfilePhotoHandler(GenericAPIView):
 
         profile_photo = create_profile_photo_from_file(data.validated_data["profile_photo"])
         profile_photo.save(fp="media/user_profile_foto/" + str(request.user) + ".png")
-        print(request.user)
         return Response("Successfully uploaded a new avatar.")
