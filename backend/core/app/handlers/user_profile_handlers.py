@@ -13,7 +13,7 @@ from core.app.services.profile_services import ProfilePhotoCreator
 class UserProfilePhotoHandler(GenericAPIView):
     serializer_class = UserProfileRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def put(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
