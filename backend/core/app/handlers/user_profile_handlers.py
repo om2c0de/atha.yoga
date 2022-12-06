@@ -17,6 +17,6 @@ class UserProfilePhotoHandler(GenericAPIView):
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
-        ProfilePhotoCreator(user=request.user, data=data)
+        ProfilePhotoCreator(user=request.user, data=data).create()
 
         return Response("Successfully uploaded a new avatar.")
