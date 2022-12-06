@@ -6,8 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from core.app.http.requests.profile_requests import UserProfileRequest
-from core.app.repositories.user_repository import UserRepository
-from core.app.services.create_profile_photo import create_profile_photo_from_file
+from core.app.services.profile_services import ProfilePhotoCreator
 
 
 @permission_classes([IsAuthenticated])
@@ -18,9 +17,6 @@ class UserProfilePhotoHandler(GenericAPIView):
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
-        profile_photo = create_profile_photo_from_file(data.validated_data["profile_photo"])
-        profile_photo.save(fp="media/user_profile_foto/" + str(request.user) + ".png")
-        user = UserRepository().find_user_by_email(email=request.user)
-        user.avatar = "media/user_profile_foto/" + str(request.user) + ".png"
-        user.save()
+        ProfilePhotoCreator(user=request.user, data=data)
+
         return Response("Successfully uploaded a new avatar.")
