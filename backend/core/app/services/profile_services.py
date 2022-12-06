@@ -28,8 +28,7 @@ class ProfilePhotoCreator:
         image.putalpha(ProfilePhotoCreator._make_circle_mask(self.SIZE))
         return image
 
-    @staticmethod
-    def _make_square(image: Image) -> Image:
+    def _make_square(self, image: Image) -> Image:
         width, height = image.size
         if height < width:
             square = image.crop(((width - height) // 2, 0, (width - height) // 2 + height, height))
@@ -37,8 +36,7 @@ class ProfilePhotoCreator:
             square = image.crop((0, 0, width, width))
         return square
 
-    @staticmethod
-    def _make_circle_mask(radius: int) -> Image:
+    def _make_circle_mask(self, radius: int) -> Image:
         mask = Image.new('L', (radius, radius))
         mask_draw = ImageDraw(mask)
         mask_draw.ellipse((0, 0, radius, radius), fill=255)
