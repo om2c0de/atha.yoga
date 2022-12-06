@@ -23,9 +23,9 @@ class ProfilePhotoCreator:
         image = Image.open(file)
         width, height = image.size
         if width != height:
-            image = ProfilePhotoCreator._make_square(image)
+            image = self._make_square(image)
         image.thumbnail(size=(self.SIZE, self.SIZE))
-        image.putalpha(ProfilePhotoCreator._make_circle_mask(self.SIZE))
+        image.putalpha(self._make_circle_mask(self.SIZE))
         return image
 
     def _make_square(self, image: Image) -> Image:
