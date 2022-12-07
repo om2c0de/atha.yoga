@@ -24,48 +24,50 @@ const PasswordRecovery = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h4" sx={{ mb: 4 }}>
-          Восстановление пароля
-        </Typography>
-        <Typography variant="body2" textAlign="center">
-          Мы отправим вам письмо
-        </Typography>
-        <Typography variant="body2" textAlign="center">
-          со ссылкой для восстановления пароля
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate className="form__container">
-          <TextField
-            sx={{ mb: 2, mt: 1 }}
-            label="Электронная почта"
-            margin="normal"
-            fullWidth
-            id="email"
-            placeholder="E-mail"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <Button
-            type="submit"
-            size="large"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 2, mb: 1 }}
-          >
-            Отправить
-          </Button>
+    <div className="container-center">
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h4" sx={{ mb: 4 }}>
+            Восстановление пароля
+          </Typography>
+          <Typography variant="body2" textAlign="center">
+            Мы отправим вам письмо
+          </Typography>
+          <Typography variant="body2" textAlign="center">
+            со ссылкой для восстановления пароля
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate className="form__container">
+            <TextField
+              sx={{ mb: 2, mt: 1 }}
+              label="Электронная почта"
+              margin="normal"
+              fullWidth
+              id="email"
+              placeholder="E-mail"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <Button
+              type="submit"
+              size="large"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 2, mb: 1 }}
+            >
+              Отправить
+            </Button>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </div>
   );
 };
 export default PasswordRecovery;
