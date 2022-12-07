@@ -66,7 +66,7 @@ const SignUp = () => {
 
     setSuccessful(false);
 
-    dispatch(register({ email, password }))
+    dispatch(registerSlice({ email, password }))
         .unwrap()
         .then(() => {
           setSuccessful(true);
