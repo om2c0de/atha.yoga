@@ -94,9 +94,9 @@ const LogIn = () => {
             />
           </FormControl>
           <div style={{ textAlign: 'right' }}>
-            <Link to="/recovery-password" variant="body2" underline="none">
-              Забыли пароль?
-            </Link>
+            <Typography component={Link} variant="body2" to="/recovery-password" sx={{ textDecoration: 'none' }}>
+               Забыли пароль?
+             </Typography>
           </div>
           <Button
             type="submit"
@@ -114,9 +114,9 @@ const LogIn = () => {
               </Typography>
             </Grid>
             <Grid item>
-              <Link to="/register" variant="body2" underline="none">
-                Зарегистрироваться
-              </Link>
+              <Typography component={Link} variant="body2" to="/register" sx={{ textDecoration: 'none' }}>
+                 Зарегистрироваться
+              </Typography>
             </Grid>
           </Grid>
         </Box>
