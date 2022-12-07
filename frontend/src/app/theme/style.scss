@@ -9,6 +9,14 @@ body {
   background-color: $body-color;
 }
 
+.container-center {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} 
+
 .welcome__description {
   height: 44px;
   text-align: center;
@@ -56,12 +64,5 @@ body {
   padding: 40px 10px;
   border: 1px solid #E5E5E5;
   border-radius: 5px;
-}
-
-.line {
-  margin: 32px 72px;
-  height: 0;
-  width: 232px;
-  border-bottom: 1px solid #E0E0E0;
 }
 
