@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -13,8 +14,23 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Container from '@mui/material/Container';
 import { FormControl } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
+import loginSlice from '../../core/slices/auth/login';
+import { clearMessage } from '../../core/slices/message/index';
 
 const LogIn = () => {
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const { message } = useSelector(state => state.message);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
   const [values, setValues] = useState({
     amount: '',
     password: '',
@@ -41,7 +57,26 @@ const LogIn = () => {
       email: data.get('email'),
       password: data.get('password'),
     });
+    const { email, password } = {
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+    setLoading(true);
+
+    dispatch(loginSlice({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate('/profile');
+        window.location.reload();
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
+
+  if (isLoggedIn) {
+    return <Navigate to="/profile" />;
+  }
 
   return (
     <div className="container-center">
@@ -60,6 +95,7 @@ const LogIn = () => {
             <TextField
               sx={{ mb: 2 }}
               margin="normal"
+              value={values.email}
               fullWidth
               id="email"
               label="Электронная почта"
@@ -95,9 +131,12 @@ const LogIn = () => {
             </FormControl>
             <div style={{ textAlign: 'right' }}>
               <Typography component={Link} variant="body2" to="/recovery-password" sx={{ textDecoration: 'none' }}>
-                 Забыли пароль?
-               </Typography>
+                Забыли пароль?
+              </Typography>
             </div>
+            {message && (
+                <Typography variant="body2" color="text.error">{message}</Typography>
+            )}
             <Button
               type="submit"
               size="large"
@@ -115,7 +154,7 @@ const LogIn = () => {
               </Grid>
               <Grid item>
                 <Typography component={Link} variant="body2" to="/register" sx={{ textDecoration: 'none' }}>
-                   Зарегистрироваться
+                  Зарегистрироваться
                 </Typography>
               </Grid>
             </Grid>
