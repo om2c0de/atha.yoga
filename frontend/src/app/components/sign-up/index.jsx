@@ -114,29 +114,51 @@ const SignUp = () => {
               </Typography>
             </Grid>
             <Grid item>
-              <Link to="/login" variant="body2" underline="none">
+              <Typography
+                    component={Link}
+                    to="/login"
+                    variant="body2"
+                    sx={{ textDecoration: 'none' }}
+               >
                 Войти
-              </Link>
+              </Typography>
             </Grid>
           </Grid>
         </Box>
-        <div style={{ position: 'absolute', bottom: 32 }}>
-          <Typography variant="caption">
-            Нажимая на кнопку «Зарегистрироваться», я подтверждаю,
-          </Typography>
-          <Grid container justifyContent="center" spacing={1}>
-            <Grid item>
-              <Typography variant="caption">
-                что ознакомлен(а) с
+        <div style={{
+            position: 'absolute',
+            bottom: 32,
+            textAlign: 'center',
+            maxWidth: 380,
+            lineHeight: 0.1,
+          }}
+          >
+            <Typography variant="caption">
+              Нажимая на кнопку «Зарегистрироваться», вы принимаете условия
+              <Typography
+                component={Link}
+                variant="caption"
+                to="#"
+                sx={{ textDecoration: 'none' }}
+                marginLeft={1}
+              >
+                Пользовательского соглашения
               </Typography>
-            </Grid>
-            <Grid item>
-              <Link variant="caption" underline="none">
-                пользовательским соглашением
-              </Link>
-            </Grid>
-          </Grid>
-        </div>
+            </Typography>
+            <Typography variant="caption" sx={{ maxWidth: 300 }} marginLeft={1}>
+              и
+              <Typography
+                component={Link}
+                variant="caption"
+                to="#"
+                sx={{ textDecoration: 'none' }}
+                marginLeft={1}
+              >
+                Политики конфиденциальности
+              </Typography>
+            </Typography>
+          </div>
+        </Box>
       </Box>
     </Container>
   );
