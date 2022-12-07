@@ -107,9 +107,9 @@ const SplashScreens = () => {
             </Typography>
           </Grid>
           <Grid item>
-            <Link to="/login" variant="body2" underline="none">
+            <Typography component={Link} variant="body2" to="/login" sx={{ textDecoration: 'none' }}>
               Войти
-            </Link>
+            </Typography>
           </Grid>
         </Grid>
       </Box>
