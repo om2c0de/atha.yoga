@@ -159,7 +159,6 @@ const SignUp = () => {
             </Typography>
           </div>
         </Box>
-      </Box>
     </Container>
   );
 };

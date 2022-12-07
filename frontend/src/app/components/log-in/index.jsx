@@ -44,84 +44,85 @@ const LogIn = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h4" fontWeight="500" sx={{ mb: 3 }}>
-          Войти в аккаунт
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} className="form__container">
-          <TextField
-            sx={{ mb: 2 }}
-            margin="normal"
-            fullWidth
-            id="email"
-            label="Электронная почта"
-            placeholder="E-mail"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel>Пароль</InputLabel>
-            <OutlinedInput
+    <div className="container-center">
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h4" fontWeight="500" sx={{ mb: 3 }}>
+            Войти в аккаунт
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} className="form__container">
+            <TextField
               sx={{ mb: 2 }}
+              margin="normal"
               fullWidth
-              label="Пароль"
-              name="password"
-              placeholder="Пароль"
-              id="password"
-              autoComplete="current-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChange('password')}
-              endAdornment={(
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-                  )}
+              id="email"
+              label="Электронная почта"
+              placeholder="E-mail"
+              name="email"
+              autoComplete="email"
+              autoFocus
             />
-          </FormControl>
-          <div style={{ textAlign: 'right' }}>
-            <Typography component={Link} variant="body2" to="/recovery-password" sx={{ textDecoration: 'none' }}>
-               Забыли пароль?
-             </Typography>
-          </div>
-          <Button
-            type="submit"
-            size="large"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Войти
-          </Button>
-          <Grid container spacing={1} alignItems="center" justifyContent="center">
-            <Grid item>
-              <Typography variant="body2">
-                Ещё нет аккаунта?
-              </Typography>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel>Пароль</InputLabel>
+              <OutlinedInput
+                sx={{ mb: 2 }}
+                fullWidth
+                label="Пароль"
+                name="password"
+                placeholder="Пароль"
+                id="password"
+                autoComplete="current-password"
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password}
+                onChange={handleChange('password')}
+                endAdornment={(
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                    )}
+              />
+            </FormControl>
+            <div style={{ textAlign: 'right' }}>
+              <Typography component={Link} variant="body2" to="/recovery-password" sx={{ textDecoration: 'none' }}>
+                 Забыли пароль?
+               </Typography>
+            </div>
+            <Button
+              type="submit"
+              size="large"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Войти
+            </Button>
+            <Grid container spacing={1} alignItems="center" justifyContent="center">
+              <Grid item>
+                <Typography variant="body2">
+                  Ещё нет аккаунта?
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography component={Link} variant="body2" to="/register" sx={{ textDecoration: 'none' }}>
+                   Зарегистрироваться
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography component={Link} variant="body2" to="/register" sx={{ textDecoration: 'none' }}>
-                 Зарегистрироваться
-              </Typography>
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </div>
   );
 };
 export default LogIn;
