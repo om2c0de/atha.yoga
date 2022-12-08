@@ -38,19 +38,34 @@ const SignUp = () => {
     showPassword: false,
   });
 
-  function MyFormHelperText() {
+  const MyFormHelperText = () => {
     const { focused } = useFormControl() || {};
 
     const helperText = React.useMemo(() => {
       if (focused) {
         return 'Не меньше 10 символов, знаки 3 из 4 категорий: 0-9, a-z, A-Z и специальные символы';
       }
-
       return '';
     }, [focused]);
 
     return <FormHelperText>{helperText}</FormHelperText>;
-  }
+  };
+
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  React.useEffect(() => {
+    if (values.email.length === 0) {
+      setErrorMessage(
+        'Заполните поле',
+      );
+    }
+  }, [values.email]);
+
+  React.useEffect(() => {
+    if (values.email.length > 0 && errorMessage) {
+      setErrorMessage('');
+    }
+  }, [values.email, errorMessage]);
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
@@ -105,22 +120,20 @@ const SignUp = () => {
             Регистрация
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }} className="form__container">
-
-              <TextField
-                sx={{ mb: 2 }}
-                margin="normal"
-                fullWidth
-                id="email"
-                label="Электронная почта"
-                placeholder="E-mail"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                //value={state.text}
-                //onChange={event => setState({ text: event.target.value })}
-                //error={text.trim() === ''}
-
-              />
+            <TextField
+              sx={{ mb: 2 }}
+              margin="normal"
+              fullWidth
+              id="email"
+              label="Электронная почта"
+              placeholder="E-mail"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              error={values.email.length === 0}
+              helperText={errorMessage}
+              value={values.email}
+            />
             <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
               <InputLabel>Пароль</InputLabel>
               <OutlinedInput
@@ -132,19 +145,18 @@ const SignUp = () => {
                 autoComplete="current-password"
                 type={values.showPassword ? 'text' : 'password'}
                 value={values.password}
-
                 onChange={handleChange('password')}
                 InputProps={{
                   endAdornment:
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>,
+  <InputAdornment position="end">
+    <IconButton
+      aria-label="toggle password visibility"
+      onClick={handleClickShowPassword}
+      onMouseDown={handleMouseDownPassword}
+    >
+      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+    </IconButton>
+  </InputAdornment>,
                 }}
               />
               <MyFormHelperText />
