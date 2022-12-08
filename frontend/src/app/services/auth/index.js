@@ -4,10 +4,10 @@ import { LOGIN_URL, REGISTER_URL } from './utils';
 import { USER_STORAGE_KEY } from '../user/utils';
 
 const register = ({ email, password }) => axios
-  .post(REGISTER_URL, { email, password })
+  .post(REGISTER_URL, { email, password, password_confirmation: password })
   .then(response => {
-    if (response.data.accessToken) {
-      storage.set(USER_STORAGE_KEY, response.data);
+    if (response.data.data.tokens.access) {
+      storage.set(USER_STORAGE_KEY, response.data.data);
     }
 
     return response.data;
@@ -16,8 +16,8 @@ const register = ({ email, password }) => axios
 const login = ({ email, password }) => axios
   .post(LOGIN_URL, { email, password })
   .then(response => {
-    if (response.data.accessToken) {
-      storage.set(USER_STORAGE_KEY, response.data);
+    if (response.data.data.tokens.access) {
+      storage.set(USER_STORAGE_KEY, response.data.data);
     }
 
     return response.data;

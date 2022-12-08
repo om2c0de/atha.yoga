@@ -10,7 +10,7 @@ import logoutSlice from '../../../core/slices/auth/logout';
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-  const { user, isLoggedIn } = useSelector(state => state.auth);
+  const { user, isLoggedIn, tokens } = useSelector(state => state.auth);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -49,8 +49,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const value = useMemo(() => ({
-    user, isLoggedIn, isLoading, login, register, logout,
-  }), [user]);
+    user, isLoggedIn, isLoading, login, register, logout, tokens,
+  }), [user, tokens]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

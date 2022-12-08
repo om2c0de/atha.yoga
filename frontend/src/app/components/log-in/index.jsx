@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -13,6 +13,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Container from '@mui/material/Container';
 import { FormControl } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
+import { AuthContext } from '../../utils/providers/auth';
 
 const LogIn = () => {
   const [values, setValues] = useState({
@@ -22,6 +23,7 @@ const LogIn = () => {
     weightRange: '',
     showPassword: false,
   });
+  const context = useContext(AuthContext);
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
@@ -37,10 +39,7 @@ const LogIn = () => {
   const handleSubmit = event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    context.login({ email: data.get('email'), password: data.get('password') });
   };
 
   return (
