@@ -116,6 +116,10 @@ const SignUp = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                //value={state.text}
+                //onChange={event => setState({ text: event.target.value })}
+                //error={text.trim() === ''}
+
               />
             <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
               <InputLabel>Пароль</InputLabel>
@@ -128,6 +132,7 @@ const SignUp = () => {
                 autoComplete="current-password"
                 type={values.showPassword ? 'text' : 'password'}
                 value={values.password}
+
                 onChange={handleChange('password')}
                 InputProps={{
                   endAdornment:
