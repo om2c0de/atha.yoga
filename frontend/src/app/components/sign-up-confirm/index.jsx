@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import letter from '../../../assets/public/letter.svg';
+import './style.scoped.css';
 
 const SignInConfirm = () => (
   <div className="sign_in_confirm__container">

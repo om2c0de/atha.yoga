@@ -9,60 +9,12 @@ body {
   background-color: $body-color;
 }
 
-.container-center {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} 
 
-.welcome__description {
-  height: 44px;
-  text-align: center;
-  max-width: 311px;
-}
 
-.form__container {
-  margin-top: 20px;
-  padding: 5px 16px 30px 16px;
-  border: 1px solid #E5E5E5;
-  border-radius: 5px;
-}
 
-.logo__container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #0D6EFD;
-}
 
-.sign_in_confirm__container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 
-.log_in_blocked__container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.log_in_blocked__container-frame {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 10px;
-  border: 1px solid #E5E5E5;
-  border-radius: 5px;
-}
+
+
 

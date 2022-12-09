@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import logInBlockedImg from '../../../assets/public/log-in-blocked.svg';
+import './style.scoped.css';
 
 const LogInBlocked = () => (
   <div className="log_in_blocked__container">

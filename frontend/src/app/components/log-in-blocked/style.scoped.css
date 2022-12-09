@@ -1,0 +1,29 @@
+html {
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+.log_in_blocked__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.log_in_blocked__container-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 10px;
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+}

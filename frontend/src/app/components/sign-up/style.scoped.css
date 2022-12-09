@@ -1,0 +1,18 @@
+html {
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+.form__container {
+    margin-top: 20px;
+    padding: 5px 16px 30px 16px;
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+}

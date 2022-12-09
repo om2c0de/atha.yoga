@@ -18,6 +18,7 @@ import InputLabel from '@mui/material/InputLabel';
 import registerSlice from '../../core/slices/auth/register';
 import { clearMessage } from '../../core/slices/message/index';
 import SignUpConfirm from '../sign-up-confirm/index.jsx';
+import './style.scoped.css';
 
 const SignUp = () => {
   const [successful, setSuccessful] = useState(false);

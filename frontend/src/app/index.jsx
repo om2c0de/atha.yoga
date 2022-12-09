@@ -8,6 +8,7 @@ import RegisterPage from './pages/auth/register';
 import ProfilePage from './pages/profile';
 import ErrorPage from './pages/error';
 import PasswordRecoveryPage from './pages/password-recovery';
+import ChangePasswordPage from "./pages/change-password";
 import AuthProvider from './utils/providers/auth';
 import BaseLayout from './layouts';
 import ProfileLayout from './layouts/profile';
@@ -58,6 +59,7 @@ const App = () => {
           <Route path="register" element={<RegisterPage />} />
           <Route path="profile" element={<ProfilePage auth={auth} />} />
           <Route path="recovery-password" element={<PasswordRecoveryPage />} />
+          <Route path="change-password" element={<ChangePasswordPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>

@@ -16,6 +16,7 @@ import { FormControl } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import loginSlice from '../../core/slices/auth/login';
 import { clearMessage } from '../../core/slices/message/index';
+import './style.scoped.css';
 
 const LogIn = () => {
   const navigate = useNavigate();

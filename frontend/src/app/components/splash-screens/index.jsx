@@ -12,6 +12,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 import splash1 from '../../../assets/public/splash1.svg';
 import splash2 from '../../../assets/public/splash2.svg';
 import splash3 from '../../../assets/public/splash3.svg';
+import './style.scoped.css';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
