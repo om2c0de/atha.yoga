@@ -9,11 +9,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Container from '@mui/material/Container';
-import { FormControl } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
+import { useDispatch, useSelector } from 'react-redux';
 import { AuthContext } from '../../utils/providers/auth';
+import { setMessage } from '../../core/slices/message';
 
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -24,9 +23,11 @@ const SignUp = () => {
     showPassword: false,
   });
   const context = useContext(AuthContext);
+  const { message } = useSelector(state => state.message);
+  const dispatch = useDispatch();
 
-  const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleFocus = el => {
+    dispatch(setMessage({ ...message, [el]: '' }));
   };
 
   const handleClickShowPassword = () => {
@@ -34,10 +35,6 @@ const SignUp = () => {
       ...values,
       showPassword: !values.showPassword,
     });
-  };
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault();
   };
 
   const handleSubmit = event => {
@@ -69,34 +66,37 @@ const SignUp = () => {
             placeholder="E-mail"
             name="email"
             autoComplete="email"
+            error={!!message?.email}
+            helperText={message?.email}
+            onFocus={() => handleFocus('email')}
             autoFocus
           />
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel>Пароль</InputLabel>
-            <OutlinedInput
-              sx={{ mb: 2 }}
-              fullWidth
-              label="Пароль"
-              name="password"
-              placeholder="Пароль"
-              id="password"
-              autoComplete="current-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChange('password')}
-              endAdornment={(
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )}
-            />
-          </FormControl>
+          <TextField
+            sx={{ mb: 2 }}
+            fullWidth
+            label="Пароль"
+            name="password"
+            placeholder="Пароль"
+            id="password"
+            autoComplete="current-password"
+            type={values.showPassword ? 'text' : 'password'}
+            error={!!message?.password}
+            helperText={message?.password}
+            onFocus={() => handleFocus('password')}
+            InputProps={{
+              endAdornment:
+                (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+            }}
+          />
           <Button
             type="submit"
             size="large"

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -9,11 +10,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Container from '@mui/material/Container';
-import { FormControl } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
 import { AuthContext } from '../../utils/providers/auth';
+import { setMessage } from '../../core/slices/message';
 
 const LogIn = () => {
   const [values, setValues] = useState({
@@ -24,16 +23,18 @@ const LogIn = () => {
     showPassword: false,
   });
   const context = useContext(AuthContext);
-
-  const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const { message } = useSelector(state => state.message);
+  const dispatch = useDispatch();
 
   const handleClickShowPassword = () => {
     setValues({
       ...values,
       showPassword: !values.showPassword,
     });
+  };
+
+  const handleFocus = el => {
+    dispatch(setMessage({ ...message, [el]: '', detail: '' }));
   };
 
   const handleSubmit = event => {
@@ -65,38 +66,44 @@ const LogIn = () => {
             placeholder="E-mail"
             name="email"
             autoComplete="email"
-            autoFocus
+            error={!!message?.email || !!message?.detail}
+            helperText={message?.email}
+            onFocus={() => handleFocus('email')}
           />
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel>Пароль</InputLabel>
-            <OutlinedInput
-              sx={{ mb: 2 }}
-              fullWidth
-              label="Пароль"
-              name="password"
-              placeholder="Пароль"
-              id="password"
-              autoComplete="current-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChange('password')}
-              endAdornment={(
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-                  )}
-            />
-          </FormControl>
+          <TextField
+            sx={{ mb: 2 }}
+            fullWidth
+            label="Пароль"
+            name="password"
+            placeholder="Пароль"
+            id="password"
+            autoComplete="current-password"
+            type={values.showPassword ? 'text' : 'password'}
+            error={!!message?.password || !!message?.detail}
+            helperText={message?.password}
+            onFocus={() => handleFocus('password')}
+            InputProps={{
+              endAdornment:
+                  (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                      >
+                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+            }}
+          />
           <div style={{ textAlign: 'right' }}>
             <Link to="/recovery-password" variant="body2" underline="none">
               Забыли пароль?
             </Link>
           </div>
+          {message?.detail && (
+            <Typography sx={{ mt: 2 }} color="error.main">{message?.detail}</Typography>
+          )}
           <Button
             type="submit"
             size="large"
