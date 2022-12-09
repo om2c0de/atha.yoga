@@ -1,8 +1,8 @@
-## 🕉 Welcome to the "Atha Yoga" project repository.
+## 🕉 Welcome to the "ATHAYOGA" project repository.
 
-Educational project in progress
+Educational project.
 
-This repository was created for adaptive PWA application to make yoga classes with the support of teachers from everywhere. 
-The application will help everyone to teach and to do yoga everywhere.
+This repository was created for the adaptive PWA to make yoga classes. </br> 
+The application goal is to help everyone with teaching and doing yoga everywhere.
 
 Stack: Python, Django, REST Framework, HTML, CSS, React.

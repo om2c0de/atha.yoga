@@ -44,3 +44,4 @@ services:
       - discovery.type=single-node
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - xpack.security.enabled=true
+      - ES_JAVA_OPTS=-Xms750m -Xmx750m
