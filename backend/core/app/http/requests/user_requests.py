@@ -53,3 +53,7 @@ class UserResetPassRequest(UnimplementedSerializer):
     pwd_reset_token = serializers.CharField(max_length=128)
     email = serializers.EmailField()
     new_password = serializers.CharField(min_length=8, max_length=128)
+
+
+class UserFavoriteAddRemoveRequest(UnimplementedSerializer):
+    lesson_id = serializers.IntegerField(min_value=1)

@@ -3,7 +3,12 @@ from typing import Tuple
 import uuid
 from django.conf import settings
 
-from rest_framework.exceptions import ValidationError, AuthenticationFailed, PermissionDenied
+from rest_framework.exceptions import (
+    ValidationError,
+    AuthenticationFailed,
+    PermissionDenied,
+    NotFound,
+)
 
 from core.app.repositories.user_repository import UserRepository
 from core.app.services.types import (
@@ -15,6 +20,9 @@ from core.app.services.email_services import SimpleEmailTextService
 from core.app.utils.jwt import UserToken, get_tokens_for_user
 from core.models import User
 from core.app.services.types import TextMailData
+
+from lessons.app.repositories.lesson_repository import LessonRepository
+from lessons.models import Lesson
 
 
 class UserRegister:
@@ -79,27 +87,77 @@ class UserChangePass:
 class UserResetPass:
     repository = UserRepository()
 
-    def reset(self, email) -> None:
+    def reset(self, email: str) -> None:
         user = self.repository.find_user_by_email(email)
         if not user:
             raise PermissionDenied("User with this email does not exist")
         pwd_reset_token = str(uuid.uuid4())
-        SimpleEmailTextService(data=TextMailData(
-            subject="Please reset your password",
-            message=f"""Reset your Atha.Yoga password
+        SimpleEmailTextService(
+            data=TextMailData(
+                subject="Please reset your password",
+                message=f"""Reset your Atha.Yoga password
             Click here: {settings.SITE_PROTOCOL_URL}/?token={pwd_reset_token}/""",
-            receivers=[email]
-        )).send()
+                receivers=[email],
+            )
+        ).send()
         user.pwd_reset_token = pwd_reset_token
         self.repository.store(user=user)
 
-    def change(self, new_password, email, pwd_reset_token) -> Tuple[User, UserToken]:
+    def change(
+        self, new_password: str, email: str, pwd_reset_token: str
+    ) -> Tuple[User, UserToken]:
         user = self.repository.find_user_by_email(email=email)
         if not user:
             raise PermissionDenied("User with this email does not exist")
         if pwd_reset_token != user.pwd_reset_token:
-            raise AuthenticationFailed(f"Tokens don't match")
+            raise AuthenticationFailed("Tokens don't match")
         user.set_password(new_password)
         self.repository.store(user=user)
         token_data = get_tokens_for_user(user)
         return user, token_data
+
+
+class UserFavoriteAdd:
+    lesson_repository = LessonRepository()
+
+    def __init__(self, user: User, lesson_id: int):
+        self.user = user
+        self.lesson_id = lesson_id
+
+    @cached_property
+    def lesson(self) -> Lesson:
+        lesson = self.lesson_repository.find_lesson_by_id(id_=self.lesson_id)
+        if not lesson:
+            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
+        if lesson in self.user.favorites.all():
+            raise PermissionDenied(
+                f"Lesson with id {self.lesson_id} already in favorites"
+            )
+
+        self.user.favorites.add(lesson)
+        return lesson
+
+    def add(self) -> Lesson:
+        return self.lesson
+
+
+class UserFavoriteRemove:
+    lesson_repository = LessonRepository()
+
+    def __init__(self, user: User, lesson_id: int):
+        self.user = user
+        self.lesson_id = lesson_id
+
+    @cached_property
+    def lesson(self) -> Lesson:
+        lesson = self.lesson_repository.find_lesson_by_id(id_=self.lesson_id)
+        if not lesson:
+            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
+        if lesson not in self.user.favorites.all():
+            raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
+
+        self.user.favorites.remove(lesson)
+        return lesson
+
+    def remove(self) -> Lesson:
+        return self.lesson

@@ -3,7 +3,6 @@ from core.app.utils.serializers import UnimplementedSerializer
 
 
 class CommentCreateRequest(UnimplementedSerializer):
-    email = serializers.EmailField()
     text = serializers.CharField(max_length=512)
     lesson_id = serializers.IntegerField(min_value=1)
 
