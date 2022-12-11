@@ -1,12 +1,11 @@
 from django.urls import path
-from core import views
+
 from core.app.handlers.user_handlers import (UserRegisterHandler,
                                              UserLoginHandler,
                                              UserChangePassHandler,
                                              UserSendPwdResetMailHandler,
                                              UserResetPassHandler
                                              )
-
 
 urlpatterns = [
     path("register/", UserRegisterHandler.as_view(), name="registration"),
