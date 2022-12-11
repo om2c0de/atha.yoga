@@ -2,17 +2,18 @@ version: '3'
 
 services:
   server:
-    build: ./backend
+    build: backend/
+    container_name: backend
     ports:
-      - 8080:8080
+      - 8000:8000
     depends_on:
       - db
 
   frontend:
-    build: ./frontend
+    build: frontend/
     container_name: frontend
     ports:
-      - 3080:8080
+      - 8080:8080
 
   db:
     image: postgres:14
@@ -30,10 +31,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 4040:8080
+      - 4040:4040
+    environment:
+      - DOZZLE_ADDR=:4040
 
   elasticsearch:
     image: elasticsearch:7.17.5
+    container_name: elasticsearch
     env_file:
       - ./backend/.env
     ports:
