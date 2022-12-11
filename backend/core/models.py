@@ -35,8 +35,6 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     roles = models.JSONField(default=user_default_roles)
 
-    favorites = models.ManyToManyField("lessons.Lesson", related_name="+", blank=True)
-
     pwd_reset_token = models.CharField(_("pwd reset token"), max_length=300)
 
     def has_role(self, role: UserRoles) -> bool:

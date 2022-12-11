@@ -47,10 +47,5 @@ class LessonCreateRequest(UnimplementedSerializer):
     schedule = ScheduleCreateRequest(many=True, allow_null=True)
 
 
-class LessonTicketBuyRequest(UnimplementedSerializer):
-    name = serializers.CharField(max_length=40)
-    amount = serializers.IntegerField(min_value=0)
-
-
-class LessonTicketUseRequest(UnimplementedSerializer):
-    name = serializers.CharField(max_length=40)
+class FavoriteLessonAddRemoveRequest(UnimplementedSerializer):
+    lesson_id = serializers.IntegerField(min_value=1)

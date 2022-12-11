@@ -7,7 +7,6 @@ from rest_framework.exceptions import (
     ValidationError,
     AuthenticationFailed,
     PermissionDenied,
-    NotFound,
 )
 
 from core.app.repositories.user_repository import UserRepository
@@ -20,9 +19,6 @@ from core.app.services.email_services import SimpleEmailTextService
 from core.app.utils.jwt import UserToken, get_tokens_for_user
 from core.models import User
 from core.app.services.types import TextMailData
-
-from lessons.app.repositories.lesson_repository import LessonRepository
-from lessons.models import Lesson
 
 
 class UserRegister:
@@ -115,49 +111,3 @@ class UserResetPass:
         self.repository.store(user=user)
         token_data = get_tokens_for_user(user)
         return user, token_data
-
-
-class UserFavoriteAdd:
-    lesson_repository = LessonRepository()
-
-    def __init__(self, user: User, lesson_id: int):
-        self.user = user
-        self.lesson_id = lesson_id
-
-    @cached_property
-    def lesson(self) -> Lesson:
-        lesson = self.lesson_repository.find_lesson_by_id(id_=self.lesson_id)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
-        if lesson in self.user.favorites.all():
-            raise PermissionDenied(
-                f"Lesson with id {self.lesson_id} already in favorites"
-            )
-
-        self.user.favorites.add(lesson)
-        return lesson
-
-    def add(self) -> Lesson:
-        return self.lesson
-
-
-class UserFavoriteRemove:
-    lesson_repository = LessonRepository()
-
-    def __init__(self, user: User, lesson_id: int):
-        self.user = user
-        self.lesson_id = lesson_id
-
-    @cached_property
-    def lesson(self) -> Lesson:
-        lesson = self.lesson_repository.find_lesson_by_id(id_=self.lesson_id)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
-        if lesson not in self.user.favorites.all():
-            raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
-
-        self.user.favorites.remove(lesson)
-        return lesson
-
-    def remove(self) -> Lesson:
-        return self.lesson

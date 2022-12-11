@@ -54,6 +54,10 @@ class Lesson(TimeStampedModel):
     payment = models.CharField(max_length=30, choices=LessonPaymentTypes.choices)
     price = models.FloatField(validators=(MinValueValidator(limit_value=0),))
 
+    favorites = models.ManyToManyField(
+        User, related_name="favorite_lessons", blank=True
+    )
+
     class Meta:
         verbose_name = "Занятие"
         verbose_name_plural = "Занятия"

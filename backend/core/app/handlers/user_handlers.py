@@ -3,8 +3,6 @@ from typing import Any
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
 
 from core.app.http.requests.user_requests import (
     UserRegisterRequest,
@@ -12,7 +10,6 @@ from core.app.http.requests.user_requests import (
     UserChangePassRequest,
     UserResetPassRequest,
     UserSendPwdResetMailRequest,
-    UserFavoriteAddRemoveRequest,
 )
 from core.app.http.resources.user_resources import UserResource
 from core.app.services.user_services import (
@@ -20,11 +17,7 @@ from core.app.services.user_services import (
     UserLogin,
     UserChangePass,
     UserResetPass,
-    UserFavoriteAdd,
-    UserFavoriteRemove,
 )
-
-from lessons.app.http.resources.lesson_resources import LessonResource
 
 
 class UserRegisterHandler(GenericAPIView):
@@ -92,38 +85,3 @@ class UserResetPassHandler(GenericAPIView):
         return Response(
             {"data": {"user": UserResource(user).data, "tokens": token._asdict()}}
         )
-
-
-@permission_classes([IsAuthenticated])
-class UserFavoriteAddHandler(GenericAPIView):
-    serializer_class = UserFavoriteAddRemoveRequest
-
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        data = self.serializer_class(data=request.data)
-        data.is_valid(raise_exception=True)
-
-        lesson = UserFavoriteAdd(
-            user=self.request.user, lesson_id=data.validated_data["lesson_id"]
-        ).add()
-        return Response({"lesson": LessonResource(lesson).data})
-
-
-@permission_classes([IsAuthenticated])
-class UserFavoriteRemoveHandler(GenericAPIView):
-    serializer_class = UserFavoriteAddRemoveRequest
-
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        data = self.serializer_class(data=request.data)
-        data.is_valid(raise_exception=True)
-
-        lesson = UserFavoriteRemove(
-            user=self.request.user, lesson_id=data.validated_data["lesson_id"]
-        ).remove()
-        return Response({"lesson": LessonResource(lesson).data})
-
-
-@permission_classes([IsAuthenticated])
-class UserFavoriteListHandler(GenericAPIView):
-    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        lessons = self.request.user.favorite_lessons.all()
-        return Response({"lessons": LessonResource(lessons, many=True).data})

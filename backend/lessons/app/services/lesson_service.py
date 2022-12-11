@@ -1,10 +1,12 @@
 from functools import cached_property
 
+from rest_framework.exceptions import NotFound, ValidationError
+
 from core.models import User
-from lessons.app.repositories.lesson_repository import LessonRepository, TicketRepository
+from lessons.app.repositories.lesson_repository import LessonRepository
 from lessons.app.repositories.schedule_repository import ScheduleRepository
-from lessons.app.services.types import LessonCreateData, TicketCreateData
-from lessons.models import Lesson, Schedule, Ticket
+from lessons.app.services.types import LessonCreateData
+from lessons.models import Lesson, Schedule
 
 
 class LessonCreator:
@@ -54,21 +56,30 @@ class LessonCreator:
         return self.lesson
 
 
-class TicketCreator:
-    repositories = TicketRepository()
+class FavoriteLessonsWork:
+    repository = LessonRepository()
 
-    def __init__(self, data: TicketCreateData, user: User):
-        self._data = data
-        self._user = user
+    def __init__(self, user: User, lesson_id: int):
+        self.user = user
+        self.lesson_id = lesson_id
 
     @cached_property
-    def ticket(self) -> Ticket:
-        ticket = Ticket()
-        ticket.name = self._data["name"]
-        ticket.user = self._user
-        ticket.amount = self._data["amount"]
-        return ticket
+    def lesson(self) -> Lesson:
+        lesson = self.repository.find_lesson_by_id(id_=self.lesson_id)
+        if not lesson:
+            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
+        return lesson
 
-    def create(self) -> Ticket:
-        self.repositories.store(ticket=self.ticket)
-        return self.ticket
+    def add(self) -> Lesson:
+        if self.lesson in self.repository.get_user_favorite_lessons(user=self.user):
+            raise ValidationError(
+                f"Lesson with id {self.lesson_id} already in favorites"
+            )
+        self.repository.add_user_favorite_lesson(user=self.user, lesson=self.lesson)
+        return self.lesson
+
+    def remove(self) -> Lesson:
+        if self.lesson not in self.repository.get_user_favorite_lessons(user=self.user):
+            raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
+        self.repository.remove_user_favorite_lesson(user=self.user, lesson=self.lesson)
+        return self.lesson

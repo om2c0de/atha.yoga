@@ -11,5 +11,4 @@ class UserRepository(BaseRepository):
         user.save()
 
     def find_user_by_email(self, email: str) -> Optional[User]:
-        user = User.objects.filter(email=email).first()
-        return user
+        return User.objects.filter(email=email).first()

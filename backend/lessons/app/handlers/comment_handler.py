@@ -3,7 +3,6 @@ from typing import Any
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.request import Request
 from rest_framework.response import Response
 
 from lessons.app.http.requests.comment_requests import (
@@ -19,8 +18,8 @@ from lessons.app.services.comment_service import CommentCreate
 class CommentCreateHandler(GenericAPIView):
     serializer_class = CommentCreateRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        data = self.serializer_class(data=request.data)
+    def post(self, *args: Any, **kwargs: Any) -> Response:
+        data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
         comment = CommentCreate(
@@ -32,8 +31,8 @@ class CommentCreateHandler(GenericAPIView):
 class CommentListHandler(GenericAPIView):
     serializer_class = CommentListRequest
 
-    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        data = self.serializer_class(data=request.data)
+    def get(self, *args: Any, **kwargs: Any) -> Response:
+        data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
         comments = CommentRepository().find_by_lesson_id(
