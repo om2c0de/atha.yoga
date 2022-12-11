@@ -166,3 +166,4 @@ ELASTICSEARCH_DSL = {
         f"{os.environ.get('ELASTIC_HOST')}:{os.environ.get('ELASTIC_PORT')}"
     },
 }
+abc = "abc"
