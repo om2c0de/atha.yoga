@@ -6,6 +6,8 @@ services:
     container_name: backend
     ports:
       - 8000:8000
+    volumes:
+      - ./backend/static:/opt/services/backend/src/static
     depends_on:
       - db
 
