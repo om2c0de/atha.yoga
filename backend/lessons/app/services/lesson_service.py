@@ -1,10 +1,10 @@
 from functools import cached_property
 
 from core.models import User
-from lessons.app.repositories.lesson_repository import LessonRepository
+from lessons.app.repositories.lesson_repository import LessonRepository, TicketRepository
 from lessons.app.repositories.schedule_repository import ScheduleRepository
-from lessons.app.services.types import LessonCreateData
-from lessons.models import Lesson, Schedule
+from lessons.app.services.types import LessonCreateData, TicketCreateData
+from lessons.models import Lesson, Schedule, Ticket
 
 
 class LessonCreator:
@@ -52,3 +52,23 @@ class LessonCreator:
         self.repos.store(lesson=self.lesson)
         self._create_schedule()
         return self.lesson
+
+
+class TicketCreator:
+    repositories = TicketRepository()
+
+    def __init__(self, data: TicketCreateData, user: User):
+        self._data = data
+        self._user = user
+
+    @cached_property
+    def ticket(self) -> Ticket:
+        ticket = Ticket()
+        ticket.name = self._data["name"]
+        ticket.user = self._user
+        ticket.amount = self._data["amount"]
+        return ticket
+
+    def create(self) -> Ticket:
+        self.repositories.store(ticket=self.ticket)
+        return self.ticket

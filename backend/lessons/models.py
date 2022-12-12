@@ -82,3 +82,13 @@ class Comment(TimeStampedModel):
     class Meta:
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"
+
+
+class Ticket(models.Model):
+    name = models.CharField(max_length=40)  # models.ForeignKey(Lesson, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.CharField(max_length=8)
+
+    class Meta:
+        verbose_name = "Билет"
+        verbose_name_plural = "Билеты"

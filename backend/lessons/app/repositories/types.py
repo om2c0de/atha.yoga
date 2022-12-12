@@ -10,3 +10,8 @@ class LessonFilterData(TypedDict, total=False):
     start_datetime: Optional[datetime.datetime]
     day: Optional[int]
     end_datetime: Optional[datetime.datetime]
+
+
+class TicketCreateData(TypedDict):
+    name: str
+    amount: str

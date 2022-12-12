@@ -6,7 +6,7 @@ from lessons.app.handlers.comment_handler import (
 )
 from lessons.app.handlers.lesson_handlers import (
     LessonsFilterHandler,
-    LessonCreateHandler,
+    LessonCreateHandler, LessonTicketBuyHandler, LessonTicketUseHandler,
 )
 
 urlpatterns = [
@@ -14,4 +14,6 @@ urlpatterns = [
     path("comments/", CommentListHandler.as_view(), name="comment_list"),
     path("create/", LessonCreateHandler.as_view()),
     path("filter/", LessonsFilterHandler.as_view()),
+    path("ticket_buy/", LessonTicketBuyHandler.as_view()),
+    path("ticket_use/", LessonTicketUseHandler.as_view()),
 ]

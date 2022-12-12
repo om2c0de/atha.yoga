@@ -35,3 +35,10 @@ class LessonCreateData(TypedDict):
     price: int
     complexity: LessonComplexities
     schedule: Optional[List[ScheduleCreateData]]
+
+
+class TicketCreateData(TypedDict):
+    name: str
+    amount: str
+
+
