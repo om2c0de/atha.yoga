@@ -71,9 +71,6 @@ class LessonTicketUseHandler(GenericAPIView):
 
         ticket = TicketRepository().find_amount_of_ticket(name=data.validated_data["name"])
 
-        x = LessonSeeder(user=self.request.user).seed()
-        x.save()
-
         if not ticket:
             raise PermissionDenied("dont have ticket for this lesson")
         if int(ticket.amount) > 0:
