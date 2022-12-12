@@ -12,6 +12,7 @@ import AuthProvider from './utils/providers/auth';
 import BaseLayout from './layouts';
 import ProfileLayout from './layouts/profile';
 import useAuth from './utils/hooks/useAuth';
+import Calendar from './components/calendar';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -19,7 +20,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import './theme/style.scss';
-import Calendar from "./components/calendar";
 
 const theme = createTheme({
   palette: {
