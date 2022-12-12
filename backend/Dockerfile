@@ -12,6 +12,6 @@ RUN pipenv install --system --deploy
 
 COPY . ${PROJECT_DIR}
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD ["/bin/bash", "entrypoint.sh"]

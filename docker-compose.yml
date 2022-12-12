@@ -4,8 +4,10 @@ services:
   server:
     build: backend/
     container_name: backend
+    env_file:
+      - "${ENV_FILE}"
     ports:
-      - 8000:8000
+      - "${BACKEND_PORT}:8000"
     volumes:
       - ./backend/static:/opt/services/backend/src/static
     depends_on:
@@ -15,15 +17,15 @@ services:
     build: frontend/
     container_name: frontend
     ports:
-      - 8080:8080
+      - "${FRONTEND_PORT}:8080"
 
   db:
     image: postgres:14
     container_name: db
     env_file:
-      - backend/.env
+      - "${ENV_FILE}"
     ports:
-      - 5432:5432
+      - "${DATABASE_PORT}:5432"
     volumes:
       - ./db:/var/lib/postgres/data
 
@@ -33,15 +35,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 4040:4040
+      - "${DOZZLE_PORT}:${DOZZLE_PORT}"
     environment:
-      - DOZZLE_ADDR=:4040
+      - "DOZZLE_ADDR=:${DOZZLE_PORT}"
 
   elasticsearch:
     image: elasticsearch:7.17.5
     container_name: elasticsearch
     env_file:
-      - ./backend/.env
+      - "${ENV_FILE}"
     ports:
       - "${ELASTIC_PORT}:${ELASTIC_PORT}"
     volumes:

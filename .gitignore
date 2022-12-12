@@ -3,9 +3,13 @@
 __pycache__/
 .DS_Store
 */.env
+*/.env.develop
+*/.env.master
+*/.env.stage
 */venv
 */postgresql
 */.python-version
+backend/static/
 db
 .mypy_cache
 frontend/node_modules
