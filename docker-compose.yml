@@ -3,7 +3,7 @@ version: '3'
 services:
   server:
     build: backend/
-    container_name: backend
+    container_name: "backend-${CONTAINER_SUFFIX}"
     env_file:
       - "${ENV_FILE}"
     ports:
@@ -15,13 +15,13 @@ services:
 
   frontend:
     build: frontend/
-    container_name: frontend
+    container_name: "frontend-${CONTAINER_SUFFIX}"
     ports:
       - "${FRONTEND_PORT}:8080"
 
   db:
     image: postgres:14
-    container_name: db
+    container_name: "db-${CONTAINER_SUFFIX}"
     env_file:
       - "${ENV_FILE}"
     ports:
@@ -30,7 +30,7 @@ services:
       - ./db:/var/lib/postgres/data
 
   dozzle:
-    container_name: dozzle
+    container_name: "dozzle-${CONTAINER_SUFFIX}"
     image: amir20/dozzle:v4.4.1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -41,7 +41,7 @@ services:
 
   elasticsearch:
     image: elasticsearch:7.17.5
-    container_name: elasticsearch
+    container_name: "elasticsearch-${CONTAINER_SUFFIX}"
     env_file:
       - "${ENV_FILE}"
     ports:
