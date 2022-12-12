@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
@@ -12,7 +12,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import { AuthContext } from '../../utils/providers/auth';
-import { setMessage } from '../../core/slices/message';
+import { clearMessage, setMessage } from '../../core/slices/message';
 
 const LogIn = () => {
   const [values, setValues] = useState({
@@ -25,6 +25,10 @@ const LogIn = () => {
   const context = useContext(AuthContext);
   const { message } = useSelector(state => state.message);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, []);
 
   const handleClickShowPassword = () => {
     setValues({
