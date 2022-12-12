@@ -19,6 +19,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import './theme/style.scss';
+import Calendar from "./components/calendar";
 
 const theme = createTheme({
   palette: {
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="profile" element={<ProfilePage auth={auth} />} />
           <Route path="recovery-password" element={<PasswordRecoveryPage />} />
           <Route path="*" element={<ErrorPage />} />
+          <Route path="calendar" element={<Calendar />} />
         </Route>
       </Routes>
     </ThemeProvider>
