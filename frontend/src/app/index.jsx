@@ -43,6 +43,18 @@ const theme = createTheme({
       fontSize: '1.25rem',
       lineHeight: 1.2,
     },
+    iter_h1: {
+      fontFamily: 'Inter',
+      fontWeight: 600,
+      fontSize: '18px',
+      lineHeight: 1.2,
+    },
+    iter_h2: {
+      fontFamily: 'Inter',
+      fontWeight: 400,
+      fontSize: '14px',
+      lineHeight: 1.2,
+    },
   },
 });
 

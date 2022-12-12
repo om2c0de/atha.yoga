@@ -1,0 +1,61 @@
+.MuiMenuItem-root {
+  border-radius: 8px;
+  height: 60px;
+}
+
+.MuiSvgIcon-root {
+  margin-right: 20px;
+}
+
+.MuiButtonBase-root:hover {
+  background: #0d6efd;
+  color: white;
+
+  .MuiSvgIcon-root {
+    color: white;
+  }
+}
+
+.menu_img:hover {
+  background: #0d6efd;
+  color: white;
+
+  .MuiListItemIcon-root {
+    color: white;
+  }
+}
+
+.MuiList-root {
+  padding-top: 4px;
+}
+
+.notifications_box {
+  color: gray;
+  display: flex;
+  justify-content: end;
+  column-gap: 15px;
+  padding-right: 30px;
+
+  .MuiSvgIcon-root {
+    margin: 0 !important ;
+  }
+}
+
+.MuiBox-root .MuiSvgIcon-root {
+    margin: 0 !important ;
+  }
+
+.display_none {
+  display: none;
+}
+
+.logo_img {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  width: 78px;
+  height: 18px;
+}
+
+.backgroung_img {
+  height: 100%;
+}

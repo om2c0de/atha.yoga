@@ -90,16 +90,16 @@ const SplashScreens = () => {
           position="static"
           activeStep={activeStep}
         />
-          <Button
-            component={Link}
-            to="/register"
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Присоединиться
-          </Button>
+        <Button
+          component={Link}
+          to="/register"
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Присоединиться
+        </Button>
         <Grid container spacing={1} alignItems="center" justifyContent="center">
           <Grid item>
             <Typography variant="body2">
