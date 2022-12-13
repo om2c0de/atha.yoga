@@ -23,6 +23,13 @@ import '@fontsource/roboto/700.css';
 import './theme/style.scss';
 
 const theme = createTheme({
+  breakpoints: {
+    values: {
+      mobile: 0,
+      tablet: 500,
+      desktop: 1200,
+    },
+  },
   palette: {
     primary: {
       main: '#0D6EFD',
@@ -41,6 +48,12 @@ const theme = createTheme({
     },
     h6: {
       fontSize: '1.25rem',
+      lineHeight: 1.2,
+    },
+    roboto_h3: {
+      fontFamily: 'Roboto',
+      fontWeight: 500,
+      fontSize: '18px',
       lineHeight: 1.2,
     },
     iter_h1: {
