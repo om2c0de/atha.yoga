@@ -18,7 +18,7 @@ const Calendar = () => (
     <Typography
       color="primary"
       sx={{
-        fontSize: '16px', fontWeight: '600', p: '16px',
+        fontSize: '18px', fontWeight: '500', p: '16px',
       }}
     >
       Мои занятия
