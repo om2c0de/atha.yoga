@@ -5,7 +5,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 
-const Searching = () => (
+const LessonCard = () => (
   <Box width="385px" m="16px" sx={{ border: '1px solid #E0E0E0', borderRadius: '8px' }}>
     <Grid container alignItems="flex-start" justifyContent="center">
       <Grid item>
@@ -42,4 +42,4 @@ const Searching = () => (
   </Box>
 );
 
-export default Searching;
+export default LessonCard;

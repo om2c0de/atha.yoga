@@ -31,15 +31,15 @@ const Menu = ({ auth }) => (
         </ListItemIcon>
         <ListItemText>Мой прогресс</ListItemText>
       </MenuItem>
-      <MenuItem>
+      <MenuItem component={Link} to="search-lessons">
         <ListItemIcon>
-          <CalendarMonthOutlinedIcon fontSize="large" />
+          <SearchIcon fontSize="large" />
         </ListItemIcon>
-        <ListItemText>Моё расписание</ListItemText>
+        <ListItemText>Поиск</ListItemText>
       </MenuItem>
       <MenuItem component={Link} to="calendar">
         <ListItemIcon>
-          <SearchIcon fontSize="large" />
+          <CalendarMonthOutlinedIcon fontSize="large" />
         </ListItemIcon>
         <ListItemText>Календарь</ListItemText>
       </MenuItem>

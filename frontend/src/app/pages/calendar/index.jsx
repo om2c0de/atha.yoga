@@ -1,6 +1,6 @@
 import React from 'react';
-import LessonCard from '../../components/lesson';
+import ScheduleLessonCard from '../../components/schedule-lesson-card';
 
-const CalendarPage = () => <LessonCard />;
+const CalendarPage = () => <ScheduleLessonCard />;
 
 export default CalendarPage;

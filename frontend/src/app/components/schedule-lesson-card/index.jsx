@@ -6,7 +6,7 @@ import {
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 
-const LessonCard = () => (
+const ScheduleLessonCard = () => (
   <Box
     sx={{
       marginTop: 6,
@@ -55,4 +55,4 @@ const LessonCard = () => (
   </Box>
 );
 
-export default LessonCard;
+export default ScheduleLessonCard;
