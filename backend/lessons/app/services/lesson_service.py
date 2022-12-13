@@ -71,7 +71,7 @@ class FavoriteLessonsWork:
         return lesson
 
     def add(self) -> Lesson:
-        if self.lesson in self.repository.get_user_favorite_lessons(user=self.user):
+        if self.lesson in self.repository.find_user_favorite_lessons(user=self.user):
             raise ValidationError(
                 f"Lesson with id {self.lesson_id} already in favorites"
             )
@@ -79,7 +79,9 @@ class FavoriteLessonsWork:
         return self.lesson
 
     def remove(self) -> Lesson:
-        if self.lesson not in self.repository.get_user_favorite_lessons(user=self.user):
+        if self.lesson not in self.repository.find_user_favorite_lessons(
+            user=self.user
+        ):
             raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
         self.repository.remove_user_favorite_lesson(user=self.user, lesson=self.lesson)
         return self.lesson

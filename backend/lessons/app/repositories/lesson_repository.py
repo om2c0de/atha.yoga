@@ -19,7 +19,7 @@ class LessonRepository(BaseRepository):
     def find_lesson_by_id(self, id_: int) -> Optional[Lesson]:
         return self.model.objects.filter(pk=id_).first()
 
-    def get_user_favorite_lessons(self, user: User) -> QuerySet[Lesson]:
+    def find_user_favorite_lessons(self, user: User) -> QuerySet[Lesson]:
         return user.favorite_lessons.all()
 
     def add_user_favorite_lesson(self, user: User, lesson: Lesson) -> None:

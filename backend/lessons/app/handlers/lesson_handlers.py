@@ -78,5 +78,5 @@ class FavoriteLessonRemoveHandler(GenericAPIView):
 @permission_classes([IsAuthenticated])
 class FavoriteLessonListHandler(GenericAPIView):
     def get(self, *args: Any, **kwargs: Any) -> Response:
-        lessons = LessonRepository().get_user_favorite_lessons(user=self.request.user)
+        lessons = LessonRepository().find_user_favorite_lessons(user=self.request.user)
         return Response({"data": LessonResource(lessons, many=True).data})
