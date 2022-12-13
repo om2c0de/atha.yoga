@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+//  import { useNavigate, Link } from 'react-router-dom';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -28,36 +30,34 @@ import avatar from '../../../assets/public/profile_avatar.jpg';
 import './index.scoped.scss';
 
 const Menu = () => {
-  const matches600px = useMediaQuery('(min-width:600px)');
-  const matches300px = useMediaQuery('(min-width:300px)');
-  const iconSize = matches300px ? 'large' : 'small';
+  const matches = useMediaQuery('(min-width:950px)');
 
-  if (!matches600px) {
+  if (!matches) {
     return (
       <Grid container sx={{ width: '100vw', justifyContent: 'space-around' }}>
         <Grid item>
           <ListItemIcon>
-            <SearchIcon fontSize={iconSize} className="menu_img" />
+            <SearchIcon fontSize="large" className="menu_img" />
           </ListItemIcon>
         </Grid>
         <Grid item>
           <ListItemIcon>
-            <FavoriteBorderIcon fontSize={iconSize} className="menu_img" />
+            <FavoriteBorderIcon fontSize="large" className="menu_img" />
           </ListItemIcon>
         </Grid>
         <Grid item>
           <ListItemIcon>
-            <SchoolIcon fontSize={iconSize} className="menu_img" />
+            <SchoolIcon fontSize="large" className="menu_img" />
           </ListItemIcon>
         </Grid>
         <Grid item>
           <ListItemIcon>
-            <CalendarMonthOutlinedIcon fontSize={iconSize} className="menu_img" />
+            <CalendarMonthOutlinedIcon fontSize="large" className="menu_img" />
           </ListItemIcon>
         </Grid>
         <Grid item>
           <ListItemIcon>
-            <AccountCircleOutlinedIcon fontSize={iconSize} className="menu_img" />
+            <AccountCircleOutlinedIcon fontSize="large" className="menu_img" />
           </ListItemIcon>
         </Grid>
       </Grid>
@@ -65,10 +65,7 @@ const Menu = () => {
   }
   return (
     <Grid container>
-      <MenuList sx={{
-        display: 'flex', flexDirection: 'column', paddingLeft: '15px', paddingRight: '15px',
-      }}
-      >
+      <MenuList sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <img src={logo} alt="atha yoga logo" className="logo_img" />
         <MenuItem>
           <ListItemIcon>
@@ -107,73 +104,60 @@ const Menu = () => {
 
 const Profile = ({ user }) => {
   const [openText, setOpenText] = useState(true);
-  const matches600px = useMediaQuery('(min-width:600px)');
-  const matches900px = useMediaQuery('(min-width:900px)');
-  const matches300px = useMediaQuery('(min-width:300px)');
-  const iconSize = matches300px ? 'large' : 'small';
+  const matches = useMediaQuery('(min-width:950px)');
 
-  const bodyHeightForLg = matches600px ? '100vh' : '';
-  const typograthyStyleForNameXS = matches600px ? { paddingBottom: '3px', display: 'block' } : {
-    display: 'block', paddingBottom: '3px', paddingTop: '50px', textAlign: 'center', marginBottom: '0',
-  };
-  const typograthyStyleForNickNameXS = matches600px ? { paddingBottom: '20px', color: '#6C757D', display: 'block' } : {
-    paddingBottom: '20px', color: '#6C757D', textAlign: 'center', display: 'block',
-  };
-  const buttonForTextLeft = matches900px ? '-90%' : matches600px ? '-82%' : '-75%';
-  const backgroundStyle = matches600px ? { height: '94%' } : { height: '94%', borderRadius: 0, marginTop: '10px' };
+  /*
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!Object.keys(userData).length) {
+      navigate('/login');
+    }
+  });
+*/
 
   return (
     <Grid
       container
-      direction={matches600px === true ? 'row' : 'column'}
+      direction={matches === true ? 'row' : 'column'}
       justifyContent="flex-start"
       alignItems="flex-start"
       spacing={2}
       sx={{ paddingTop: '20px' }}
     >
-      {matches600px
-        ? (
-          <Grid
-            item
-            tablet="auto"
-            desktop="auto"
-            sx={{
-              justifyContent: 'center', display: 'flex', borderRight: '1px solid #DCDCDC', height: '100vh',
-            }}
-          >
-            <Menu />
-          </Grid>
-        )
-        : ''}
-
       <Grid
         item
-        tablet={6}
-        desktop={6}
-        container
-        sx={{ height: bodyHeightForLg, alignContent: 'space-between' }}
+        md={2.5}
+        sm={1}
+        sx={{
+          justifyContent: 'center', display: 'flex', borderRight: '1px solid #DCDCDC',
+        }}
       >
+        {matches ? <Menu /> : ''}
+      </Grid>
+
+      <Grid item md={6} sm={1} container>
         <Grid
           item
           sx={{
-            width: '100vw', display: 'flex', justifyContent: 'space-between',
+            marginLeft: '5%', width: '90%', display: 'flex', justifyContent: 'space-between',
           }}
         >
-          <Typography variant="roboto_h3" color="primary" sx={{ paddingTop: '2px' }}>Профиль</Typography>
-          {matches900px === false
+          <Typography component="h4" variant="h6" fontWeight="500" color="primary" sx={{ paddingBottom: '30px' }}>Профиль</Typography>
+          {matches === false
             ? (
-              <Box sx={{ width: '80px', display: 'flex', justifyContent: 'space-evenly' }}>
+              <Box sx={{ width: '80px', display: 'flex', justifyContent: 'space-between' }}>
                 <Badge badgeContent={4} color="primary" sx={{ cursor: 'pointer' }}>
-                  <NotificationsNoneIcon color="action" fontSize={iconSize} />
+                  <NotificationsNoneIcon color="action" fontSize="large" />
                 </Badge>
                 <Badge badgeContent={4} color="primary" sx={{ cursor: 'pointer' }}>
-                  <SettingsIcon color="action" fontSize={iconSize} />
+                  <SettingsIcon color="action" fontSize="large" />
                 </Badge>
               </Box>
             )
             : ''}
         </Grid>
-        <Card sx={backgroundStyle}>
+        <Card sx={{ height: '90%' }}>
           <CardMedia
             component="img"
             height="168"
@@ -181,27 +165,15 @@ const Profile = ({ user }) => {
             alt="user's background"
           />
           <CardContent>
-            {matches600px
-              ? (
-                <Avatar
+            <Avatar
               //    alt={user.user.name}
-                  src={avatar}
-                  sx={{
-                    width: 128, height: 128, marginTop: '-80px', marginLeft: '30px', marginBottom: '12px',
-                  }}
-                />
-              )
-              : ((
-                <Avatar
-              //    alt={user.user.name}
-                  src={avatar}
-                  sx={{
-                    width: 128, height: 128, position: 'absolute', marginTop: '-80px', marginLeft: 'calc(50% - 76px)', marginBottom: '12px',
-                  }}
-                />
-              ))}
-            <Typography variant="iter_h1" sx={typograthyStyleForNameXS}>Иван Иванов</Typography>
-            <Typography variant="iter_h2" sx={typograthyStyleForNickNameXS}>@ivan</Typography>
+              src={avatar}
+              sx={{
+                width: 128, height: 128, marginTop: '-80px', marginLeft: '30px', marginBottom: '12px',
+              }}
+            />
+            <Typography variant="iter_h1" sx={{ paddingBottom: '3px', display: 'block' }}>Иван Иванов</Typography>
+            <Typography variant="iter_h2" sx={{ paddingBottom: '20px', color: '#6C757D', display: 'block' }}>@ivan</Typography>
             <Typography variant="iter_h2" paragraph noWrap={openText}>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto corporis id
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto corporis id
@@ -216,20 +188,15 @@ const Profile = ({ user }) => {
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto corporis id
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto corporis id
             </Typography>
-            <Button variant="text" size="small" sx={{ textTransform: 'none', right: buttonForTextLeft, position: 'relative' }} onClick={() => setOpenText(!openText)}>
+            <Button variant="text" size="small" sx={{ textTransform: 'none', left: '90%', position: 'relative' }} onClick={() => setOpenText(!openText)}>
               {openText === true ? 'больше' : 'меньше'}
             </Button>
           </CardContent>
         </Card>
       </Grid>
-      {matches900px === true
+      {matches === true
         ? (
-          <Grid
-            item
-            tablet
-            desktop
-            className="notifications_box"
-          >
+          <Grid item md={3.5} sm={1} className="notifications_box">
             <Badge badgeContent={4} color="primary" sx={{ cursor: 'pointer' }}>
               <NotificationsNoneIcon color="action" fontSize="large" />
             </Badge>
@@ -239,7 +206,7 @@ const Profile = ({ user }) => {
           </Grid>
         )
         : ''}
-      {!matches600px ? <Grid item><Menu /></Grid> : ''}
+      {!matches ? <Grid item md={3.5} sm={1}><Menu /></Grid> : ''}
     </Grid>
   );
 };

@@ -3,18 +3,16 @@
   height: 60px;
 }
 
-.MuiList-root .MuiButtonBase-root:hover {
+.MuiSvgIcon-root {
+  margin-right: 20px;
+}
+
+.MuiButtonBase-root:hover {
   background: #0d6efd;
   color: white;
 
   .MuiSvgIcon-root {
     color: white;
-  }
-}
-
-.MuiList-root .MuiButtonBase-root {
-  .MuiSvgIcon-root {
-    margin-right: 10px;
   }
 }
 
@@ -27,6 +25,10 @@
   }
 }
 
+.MuiList-root {
+  padding-top: 4px;
+}
+
 .notifications_box {
   color: gray;
   display: flex;
@@ -37,6 +39,14 @@
   .MuiSvgIcon-root {
     margin: 0 !important ;
   }
+}
+
+.MuiBox-root .MuiSvgIcon-root {
+    margin: 0 !important ;
+  }
+
+.display_none {
+  display: none;
 }
 
 .logo_img {
