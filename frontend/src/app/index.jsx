@@ -13,6 +13,7 @@ import BaseLayout from './layouts';
 import ProfileLayout from './layouts/profile';
 import useAuth from './utils/hooks/useAuth';
 import Calendar from './components/calendar';
+import Searching from './components/searching';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="recovery-password" element={<PasswordRecoveryPage />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="calendar" element={<Calendar />} />
+          <Route path="searching" element={<Searching />} />
         </Route>
       </Routes>
     </ThemeProvider>
