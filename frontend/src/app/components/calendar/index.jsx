@@ -40,11 +40,11 @@ const Calendar = () => (
             </Grid>
             <Grid item display="flex">
               <Typography color="text.secondary" mr="16px">
-                <DateRangeOutlinedIcon fontSize="20" color="primary" sx={{ mr: '6px' }} />
+                <DateRangeOutlinedIcon fontSize="20" color="primary" sx={{ mr: '6px', verticalAlign: '-2px' }} />
                 26.11
               </Typography>
               <Typography color="text.secondary">
-                <AccessTimeOutlinedIcon fontSize="20" color="primary" sx={{ mr: '6px' }} />
+                <AccessTimeOutlinedIcon fontSize="20" color="primary" sx={{ mr: '6px', verticalAlign: '-2px' }} />
                 14:00 - 15:30
               </Typography>
             </Grid>
