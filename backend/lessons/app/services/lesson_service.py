@@ -1,12 +1,14 @@
 from functools import cached_property
 
-from rest_framework.exceptions import NotFound, ValidationError
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import NotFound, ValidationError, PermissionDenied
 
 from core.models import User
-from lessons.app.repositories.lesson_repository import LessonRepository
+from lessons.app.repositories.lesson_repository import LessonRepository, TicketRepository
 from lessons.app.repositories.schedule_repository import ScheduleRepository
+from lessons.app.repositories.types import TicketCreateData
 from lessons.app.services.types import LessonCreateData
-from lessons.models import Lesson, Schedule
+from lessons.models import Lesson, Schedule, Ticket
 
 
 class LessonCreator:
@@ -80,8 +82,59 @@ class FavoriteLessonsWork:
 
     def remove(self) -> Lesson:
         if self.lesson not in self.repository.find_user_favorite_lessons(
-            user=self.user
+                user=self.user
         ):
             raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
         self.repository.remove_user_favorite_lesson(user=self.user, lesson=self.lesson)
         return self.lesson
+
+
+class TicketCreator:
+    repositories = TicketRepository()
+
+    def __init__(self, data: TicketCreateData, user: User):
+        self._data = data
+        self._user = user
+
+    @cached_property
+    def ticket(self) -> Ticket:
+        ticket = Ticket()
+        lesson = self.repositories.find_lesson_by_id(id_=int(self._data['lesson_id']))
+        ticket.name = lesson
+        ticket.user = self._user
+        ticket.amount = self._data["amount"]
+        print(ticket)
+        return ticket
+
+    def create(self) -> Ticket:
+        self.repositories.store(ticket=self.ticket)
+        return self.ticket
+
+
+class TicketUse:
+    repositories = TicketRepository()
+
+    def __init__(self, data: TicketCreateData, user: User):
+        self._data = data
+        self._user = user
+
+    @cached_property
+    def ticket(self) -> Ticket:
+        ticket = Ticket()
+        lesson = self.repositories.find_lesson_by_id(id_=int(self._data["lesson_id"]))
+        ticket.name = lesson
+        ticket.user = self._user
+        ticket.amount = -1
+        return ticket
+
+    def update(self):
+        try:
+            ticket = self.repositories.find_ticket_for_lesson(name=self.ticket.name, user=self.ticket.user)
+        except ObjectDoesNotExist:
+            raise PermissionDenied("dont have ticket for this lesson")
+
+        ticket.amount = int(ticket.amount) - 1
+
+        self.repositories.store(ticket=ticket)
+
+        return ticket

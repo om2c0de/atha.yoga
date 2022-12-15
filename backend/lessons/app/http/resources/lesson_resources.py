@@ -37,11 +37,11 @@ class LessonResource(ModelSerializer):
             "schedules",
         ]
 
-
 class TicketResource(ModelSerializer):
     class Meta:
         model = Ticket
         fields = [
+            "id"
             "name",
             "amount",
         ]

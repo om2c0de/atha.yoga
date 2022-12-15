@@ -64,5 +64,8 @@ class TicketRepository(BaseRepository):
     def store(self, ticket: Ticket) -> None:
         ticket.save()
 
-    def find_amount_of_ticket(self, name: str) -> Optional[Ticket]:
-        return self.model.objects.filter(name=name).first()
+    def find_ticket_for_lesson(self, name: Lesson, user: User) -> Optional[Ticket]:
+        return self.model.objects.filter(name=name, user=user).first()
+
+    def find_lesson_by_id(self, id_: int) -> Optional[Lesson]:
+        return LessonRepository.model.objects.filter(pk=id_).first()

@@ -13,5 +13,5 @@ class LessonFilterData(TypedDict, total=False):
 
 
 class TicketCreateData(TypedDict):
-    name: str
+    lesson_id: str
     amount: str

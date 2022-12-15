@@ -9,7 +9,7 @@ from lessons.app.handlers.lesson_handlers import (
     LessonCreateHandler,
     FavoriteLessonAddHandler,
     FavoriteLessonRemoveHandler,
-    FavoriteLessonListHandler,
+    FavoriteLessonListHandler, LessonTicketUseHandler, LessonTicketBuyHandler,
 )
 
 urlpatterns = [
@@ -28,4 +28,6 @@ urlpatterns = [
         FavoriteLessonRemoveHandler.as_view(),
         name="favorite_lesson_remove",
     ),
+    path("TicketBuy/", LessonTicketBuyHandler.as_view(), name="comment_create"),
+    path("TicketUse/", LessonTicketUseHandler.as_view(), name="comment_create"),
 ]
