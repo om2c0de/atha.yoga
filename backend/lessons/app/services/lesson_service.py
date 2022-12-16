@@ -1,13 +1,18 @@
 from functools import cached_property
+from typing import Optional
 
 from rest_framework.exceptions import NotFound, ValidationError, PermissionDenied
 
 from core.app.utils.util import setup_resource_attributes
 from core.models import User, UserRoles
 from lessons.app.repositories.lesson_repository import LessonRepository
+from core.models import User
+from lessons.app.repositories.lesson_repository import LessonRepository, TicketRepository
 from lessons.app.repositories.schedule_repository import ScheduleRepository
 from lessons.app.services.types import LessonCreateData, LessonUpdateData
 from lessons.models import Lesson, Schedule
+from lessons.app.services.types import LessonCreateData
+from lessons.models import Lesson, Schedule, Ticket
 
 
 class LessonCreator:
@@ -101,8 +106,47 @@ class FavoriteLessonsWork:
 
     def remove(self) -> Lesson:
         if self.lesson not in self.repository.find_user_favorite_lessons(
-            user=self.user
+                user=self.user
         ):
             raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
         self.repository.remove_user_favorite_lesson(user=self.user, lesson=self.lesson)
         return self.lesson
+
+
+class TicketService:
+    repositories = TicketRepository()
+
+    def __init__(self, lesson: Lesson, user: User, amount: Optional[int]):
+        self.lesson = lesson
+        self.user = user
+        self.amount = amount
+
+    @cached_property
+    def ticket(self) -> Ticket:
+        ticket = Ticket()
+        ticket.lesson = self.lesson
+        ticket.user = self.user
+        ticket.amount = self.amount
+        return ticket
+
+    def buy_ticket(self) -> Ticket:
+        ticket = self.repositories.ticket_for_lesson(lesson=self.ticket.lesson, user=self.ticket.user)
+        if not ticket:
+            self.repositories.store(ticket=self.ticket)
+            return self.ticket
+
+        ticket.amount = int(ticket.amount) + int(self.amount)
+        self.repositories.store(ticket=ticket)
+        return ticket
+
+    def use_ticket(self) -> Ticket:
+        ticket = self.repositories.ticket_for_lesson(lesson=self.ticket.lesson, user=self.ticket.user)
+        if not ticket:
+            raise PermissionDenied("ticket for lesson does not exist")
+        ticket.amount = int(ticket.amount) - 1
+
+        if ticket.amount == 0:
+            self.repositories.del_zero_ticket(ticket=ticket)
+        else:
+            self.repositories.store(ticket=ticket)
+        return ticket

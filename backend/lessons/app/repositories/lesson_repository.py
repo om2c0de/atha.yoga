@@ -2,12 +2,13 @@ from typing import Optional
 
 from django.db.models import QuerySet, Q, F
 from elasticsearch_dsl import Q as EQ
+from rest_framework.exceptions import PermissionDenied
 
 from core.app.repositories.base_repository import BaseRepository
 from core.models import User
 from lessons.app.repositories.types import LessonFilterData
 from lessons.documents import LessonDocument
-from lessons.models import Lesson
+from lessons.models import Lesson, Ticket
 
 
 class LessonRepository(BaseRepository):
@@ -59,3 +60,22 @@ class LessonRepository(BaseRepository):
             )
             filter_query &= Q(end_datetime__lte=data["end_datetime"])
         return base_query.filter(filter_query)
+
+
+class TicketRepository(BaseRepository):
+    model = Ticket
+
+    def store(self, ticket: Ticket) -> None:
+        ticket.save()
+
+    def del_zero_ticket(self, ticket: Ticket) -> None:
+        ticket.delete()
+
+    def ticket_for_lesson(self, lesson: Lesson, user: User) -> Optional[Ticket]:
+        return self.model.objects.filter(lesson=lesson.id, user=user).first()
+
+    def find_lesson_by_id(self, id_: int) -> Lesson:
+        lesson = LessonRepository.model.objects.filter(pk=id_).first()
+        if not lesson:
+            raise PermissionDenied("Lesson does not exist")
+        return lesson
