@@ -1,5 +1,6 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from polymorphic.models import PolymorphicModel
 
 from core.models import User, TimeStampedModel
 
@@ -63,6 +64,26 @@ class Lesson(TimeStampedModel):
         verbose_name_plural = "Занятия"
 
 
+class Review(PolymorphicModel, TimeStampedModel):
+    text = models.TextField()
+    star_rating = models.IntegerField(
+        validators=(MinValueValidator(limit_value=1), MaxValueValidator(limit_value=5))
+    )
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+
+
+class LessonReview(Review):
+    lesson = models.ForeignKey(Lesson, related_name="reviews", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Отзыв о занятии"
+        verbose_name_plural = "Отзывы о занятии"
+
+
 class Schedule(TimeStampedModel):
     lesson = models.ForeignKey(
         Lesson, on_delete=models.CASCADE, related_name="schedules"
@@ -76,17 +97,24 @@ class Schedule(TimeStampedModel):
         verbose_name_plural = "Расписания"
 
 
-class Comment(TimeStampedModel):
+class Comment(PolymorphicModel):
     text = models.TextField(max_length=512)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    lesson = models.ForeignKey(
-        Lesson, related_name="comments", on_delete=models.CASCADE
-    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"
+
+
+class LessonComment(Comment):
+    lesson = models.ForeignKey(
+        Lesson, related_name="comments", on_delete=models.CASCADE
+    )
+
+    class Meta:
+        verbose_name = "Комментарий к уроку"
+        verbose_name_plural = "Комментарии к уроку"
 
 
 class Ticket(models.Model):
