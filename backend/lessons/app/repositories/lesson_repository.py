@@ -2,7 +2,6 @@ from typing import Optional
 
 from django.db.models import QuerySet, Q, F
 from elasticsearch_dsl import Q as EQ
-from rest_framework.exceptions import PermissionDenied
 
 from core.app.repositories.base_repository import BaseRepository
 from core.models import User
@@ -36,18 +35,24 @@ class LessonRepository(BaseRepository):
         base_query = self.model.objects.all()
         filter_query = Q()
         if "query" in data:
-            base_query = (
+            query = (
                 LessonDocument.search()
                 .query(
                     EQ(
                         "multi_match",
                         query=data["query"],
                         fields=["name", "description"],
-                        fuzziness="AUTO",
+                        fuzziness="AUTO:2,4",
                     )
                 )
                 .to_queryset()
             )
+            if not query.exists():
+                query = base_query.filter(
+                    Q(name__icontains=data["query"])
+                    | Q(description__icontains=data["query"])
+                )
+            base_query = query
         if "complexity" in data:
             filter_query &= Q(complexity=data["complexity"])
         if "start_datetime" in data:
@@ -59,7 +64,7 @@ class LessonRepository(BaseRepository):
                 end_datetime=F("duration") + F("start_datetime")
             )
             filter_query &= Q(end_datetime__lte=data["end_datetime"])
-        return base_query.filter(filter_query)
+        return base_query.filter(filter_query).order_by("-id")
 
 
 class TicketRepository(BaseRepository):
