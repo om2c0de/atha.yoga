@@ -1,15 +1,15 @@
 from django.contrib import admin
 
-from .models import Lesson, Schedule, LessonComment, LessonReview
+from .models import Course, Schedule, CourseComment, CourseReview
 
 
-@admin.register(Lesson)
-class LessonAdmin(admin.ModelAdmin):
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "name",
         "teacher",
-        "lesson_type",
+        "course_type",
         "level",
         "complexity",
         "payment",
@@ -22,7 +22,7 @@ class LessonAdmin(admin.ModelAdmin):
     )
     list_display_links = ("id", "name")
     list_filter = (
-        "lesson_type",
+        "course_type",
         "level",
         "complexity",
         "payment",
@@ -40,7 +40,7 @@ class LessonAdmin(admin.ModelAdmin):
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "lesson",
+        "course",
         "start_at",
         "created_at",
     )
@@ -48,12 +48,12 @@ class ScheduleAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
 
 
-@admin.register(LessonComment)
-class LessonCommentAdmin(admin.ModelAdmin):
+@admin.register(CourseComment)
+class CourseCommentAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "user",
-        "lesson",
+        "course",
         "created_at",
     )
     search_fields = ("text",)
@@ -61,12 +61,12 @@ class LessonCommentAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
 
 
-@admin.register(LessonReview)
-class LessonReviewAdmin(admin.ModelAdmin):
+@admin.register(CourseReview)
+class CourseReviewAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "user",
-        "lesson",
+        "course",
         "star_rating",
         "created_at",
     )

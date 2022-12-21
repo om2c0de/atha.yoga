@@ -2,53 +2,53 @@ from functools import cached_property
 
 from rest_framework.exceptions import NotFound, PermissionDenied
 from core.models import User
-from lessons.app.repositories.review_repository import LessonReviewRepository
-from lessons.app.repositories.lesson_repository import LessonRepository
-from lessons.app.services.types import LessonReviewCreateData
-from lessons.models import LessonReview
+from lessons.app.repositories.review_repository import CourseReviewRepository
+from lessons.app.repositories.lesson_repository import CourseRepository
+from lessons.app.services.types import CourseReviewCreateData
+from lessons.models import CourseReview
 
 
-class LessonReviewCreate:
-    repository = LessonReviewRepository()
-    lesson_repository = LessonRepository()
+class CourseReviewCreate:
+    repository = CourseReviewRepository()
+    course_repository = CourseRepository()
 
-    def __init__(self, lesson_id: int, data: LessonReviewCreateData, user: User):
+    def __init__(self, course_id: int, data: CourseReviewCreateData, user: User):
         self.data = data
         self.user = user
-        self.lesson_id = lesson_id
+        self.course_id = course_id
 
     @cached_property
-    def review(self) -> LessonReview:
-        lesson = self.lesson_repository.find_by_id(id_=self.lesson_id)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
-        if lesson.teacher.id == self.user.id:
-            raise PermissionDenied("Teacher can't review own lesson")
-        if self.repository.check_for_user_review(user_id=self.user.id, lesson=lesson):
-            raise PermissionDenied("User can't review lesson twice")
+    def review(self) -> CourseReview:
+        course = self.course_repository.find_by_id(id_=self.course_id)
+        if not course:
+            raise NotFound(f"Undefined course with id {self.course_id}")
+        if course.teacher.id == self.user.id:
+            raise PermissionDenied("Teacher can't review own course")
+        if self.repository.check_for_user_review(user_id=self.user.id, course=course):
+            raise PermissionDenied("User can't review course twice")
 
-        review = LessonReview()
+        review = CourseReview()
         review.user = self.user
-        review.lesson = lesson
+        review.course = course
         review.text = self.data["text"]
         review.star_rating = self.data["star_rating"]
 
         return review
 
-    def create(self) -> LessonReview:
+    def create(self) -> CourseReview:
         self.repository.store(review=self.review)
         return self.review
 
 
-class LessonReviewRemove:
-    repository = LessonReviewRepository()
+class CourseReviewRemove:
+    repository = CourseReviewRepository()
 
     def __init__(self, review_id: int, user: User):
         self.review_id = review_id
         self.user = user
 
     @cached_property
-    def review(self) -> LessonReview:
+    def review(self) -> CourseReview:
         review = self.repository.find_by_id(id_=self.review_id)
         if not review:
             raise NotFound(f"Undefined review with id {self.review_id}")
@@ -59,6 +59,6 @@ class LessonReviewRemove:
 
         return review
 
-    def remove(self) -> LessonReview:
+    def remove(self) -> CourseReview:
         self.repository.remove(review=self.review)
         return self.review

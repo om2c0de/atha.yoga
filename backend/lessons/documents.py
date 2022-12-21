@@ -2,7 +2,7 @@ from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 from elasticsearch_dsl import analyzer, token_filter
 
-from lessons.models import Lesson
+from lessons.models import Course
 
 ru_analyzer = analyzer(
     "ru",
@@ -27,13 +27,13 @@ ru_analyzer = analyzer(
 
 
 @registry.register_document
-class LessonDocument(Document):
+class CourseDocument(Document):
     name = fields.TextField(analyzer=ru_analyzer)
     description = fields.TextField(analyzer=ru_analyzer)
 
     class Index:
-        name = "lessons"
+        name = "courses"
         settings = {"number_of_shards": 1, "number_of_replicas": 0}
 
     class Django:
-        model = Lesson
+        model = Course

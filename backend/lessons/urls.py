@@ -1,69 +1,67 @@
 from django.urls import path
 
 from lessons.app.handlers.comment_handlers import (
-    LessonCommentListHandler,
-    LessonCommentCreateHandler,
-    LessonCommentRemoveHandler,
+    CourseCommentListHandler,
+    CourseCommentCreateHandler,
+    CourseCommentRemoveHandler,
 )
 from lessons.app.handlers.lesson_handlers import (
-    LessonsFilterHandler,
-    LessonCreateHandler,
-    LessonUpdateHandler,
-    FavoriteLessonAddHandler,
-    FavoriteLessonRemoveHandler,
-    FavoriteLessonListHandler,
-    LessonTicketBuyHandler,
-    LessonTicketUseHandler,
-    LessonRetrieveHandler,
+    CourseFilterHandler,
+    CourseCreateHandler,
+    CourseUpdateHandler,
+    FavoriteCourseAddHandler,
+    FavoriteCourseRemoveHandler,
+    FavoriteCourseListHandler,
+    CourseTicketBuyHandler,
+    CourseTicketUseHandler,
+    CourseRetrieveHandler,
 )
 from lessons.app.handlers.review_handlers import (
-    LessonReviewListHandler,
-    LessonReviewCreateHandler,
-    LessonReviewRemoveHandler,
+    CourseReviewListHandler,
+    CourseReviewCreateHandler,
+    CourseReviewRemoveHandler,
 )
 
 urlpatterns = [
-    path("", LessonCreateHandler.as_view(), name="lesson_create"),
-    path("<int:pk>/", LessonRetrieveHandler.as_view(), name="lesson_retrieve"),
-    path("<int:pk>/", LessonUpdateHandler.as_view(), name="lesson_update"),
-    path("filter/", LessonsFilterHandler.as_view(), name="lessons_filter"),
+    path("", CourseCreateHandler.as_view(), name="course_create"),
+    path("<int:pk>/", CourseRetrieveHandler.as_view(), name="course_retrieve"),
+    path("<int:pk>/", CourseUpdateHandler.as_view(), name="course_update"),
+    path("filter/", CourseFilterHandler.as_view(), name="courses_filter"),
+    path("favorites/", FavoriteCourseListHandler.as_view(), name="favorite_course_list"),
     path(
-        "favorites/", FavoriteLessonListHandler.as_view(), name="favorite_lesson_list"
-    ),
-    path(
-        "favorites/add/", FavoriteLessonAddHandler.as_view(), name="favorite_lesson_add"
+        "favorites/add/", FavoriteCourseAddHandler.as_view(), name="favorite_course_add"
     ),
     path(
         "favorites/remove/",
-        FavoriteLessonRemoveHandler.as_view(),
-        name="favorite_lesson_remove",
+        FavoriteCourseRemoveHandler.as_view(),
+        name="favorite_course_remove",
     ),
-    path("ticket/buy/", LessonTicketBuyHandler.as_view()),
-    path("ticket/use/", LessonTicketUseHandler.as_view()),
-    path("<int:pk>/comments/", LessonCommentListHandler.as_view(), name="comment_list"),
+    path("ticket/buy/", CourseTicketBuyHandler.as_view()),
+    path("ticket/use/", CourseTicketUseHandler.as_view()),
+    path("<int:pk>/comments/", CourseCommentListHandler.as_view(), name="comment_list"),
     path(
         "<int:pk>/comments/create/",
-        LessonCommentCreateHandler.as_view(),
+        CourseCommentCreateHandler.as_view(),
         name="comment_create",
     ),
     path(
         "comments/<int:pk>/remove/",
-        LessonCommentRemoveHandler.as_view(),
+        CourseCommentRemoveHandler.as_view(),
         name="comment_remove",
     ),
     path(
-        "<int:pk>/lesson-reviews/",
-        LessonReviewListHandler.as_view(),
-        name="lesson_review_list",
+        "<int:pk>/course-reviews/",
+        CourseReviewListHandler.as_view(),
+        name="course_review_list",
     ),
     path(
-        "<int:pk>/lesson-reviews/create/",
-        LessonReviewCreateHandler.as_view(),
-        name="lesson_review_create",
+        "<int:pk>/course-reviews/create/",
+        CourseReviewCreateHandler.as_view(),
+        name="course_review_create",
     ),
     path(
-        "lesson-reviews/<int:pk>/remove/",
-        LessonReviewRemoveHandler.as_view(),
-        name="lesson_review_remove",
+        "course-reviews/<int:pk>/remove/",
+        CourseReviewRemoveHandler.as_view(),
+        name="course_review_remove",
     ),
 ]

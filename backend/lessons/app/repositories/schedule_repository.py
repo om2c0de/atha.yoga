@@ -15,9 +15,9 @@ class ScheduleRepository(BaseRepository):
         return self.model.objects.filter(pk=id_).first()
 
     def is_participant(
-        self, scheduled_lesson: Schedule, user: User
+            self, scheduled_course: Schedule, user: User
     ) -> Optional[Schedule]:
-        return scheduled_lesson.participants.filter(id=user.id)
+        return scheduled_course.participants.filter(id=user.id)
 
-    def add_participant(self, scheduled_lesson: Schedule, user: User) -> None:
-        return scheduled_lesson.participants.add(user)
+    def add_participant(self, scheduled_course: Schedule, user: User) -> None:
+        return scheduled_course.participants.add(user)

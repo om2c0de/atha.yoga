@@ -5,24 +5,24 @@ from polymorphic.models import PolymorphicModel
 from core.models import User, TimeStampedModel
 
 
-class LessonTypes(models.TextChoices):
+class CourseTypes(models.TextChoices):
     ONLINE = "ONLINE"
     VIDEO = "VIDEO"
 
 
-class LessonLevels(models.TextChoices):
+class CourseLevels(models.TextChoices):
     STARTING = "STARTING"
     CONTINUER = "CONTINUER"
     ADVANCED = "ADVANCED"
 
 
-class LessonPaymentTypes(models.TextChoices):
+class CoursePaymentTypes(models.TextChoices):
     PAYMENT = "PAYMENT"
     DONATION = "DONATION"
     FREE = "FREE"
 
 
-class LessonComplexities(models.TextChoices):
+class CourseComplexities(models.TextChoices):
     EASY = "EASY"
     MEDIUM = "MEDIUM"
     HARD = "HARD"
@@ -38,25 +38,25 @@ class RepetitionWeekdays(models.IntegerChoices):
     SUNDAY = 6
 
 
-class Lesson(TimeStampedModel):
+class Course(TimeStampedModel):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True)
-    lesson_type = models.CharField(max_length=30, choices=LessonTypes.choices)
-    level = models.CharField(max_length=30, choices=LessonLevels.choices)
+    course_type = models.CharField(max_length=30, choices=CourseTypes.choices)
+    level = models.CharField(max_length=30, choices=CourseLevels.choices)
     single = models.BooleanField(default=False)
     duration = models.DurationField()
     start_datetime = models.DateTimeField()
     deadline_datetime = models.DateTimeField(null=True)
-    complexity = models.CharField(max_length=30, choices=LessonComplexities.choices)
+    complexity = models.CharField(max_length=30, choices=CourseComplexities.choices)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     link = models.URLField()
     link_info = models.CharField(max_length=100, blank=True)
     repeat_editing = models.BooleanField(default=False)
-    payment = models.CharField(max_length=30, choices=LessonPaymentTypes.choices)
+    payment = models.CharField(max_length=30, choices=CoursePaymentTypes.choices)
     price = models.FloatField(validators=(MinValueValidator(limit_value=0),))
 
     favorites = models.ManyToManyField(
-        User, related_name="favorite_lessons", blank=True
+        User, related_name="favorite_courses", blank=True
     )
 
     class Meta:
@@ -76,8 +76,8 @@ class Review(PolymorphicModel, TimeStampedModel):
         verbose_name_plural = "Отзывы"
 
 
-class LessonReview(Review):
-    lesson = models.ForeignKey(Lesson, related_name="reviews", on_delete=models.CASCADE)
+class CourseReview(Review):
+    course = models.ForeignKey(Course, related_name="reviews", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Отзыв о занятии"
@@ -85,8 +85,8 @@ class LessonReview(Review):
 
 
 class Schedule(TimeStampedModel):
-    lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, related_name="schedules"
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name="schedules"
     )
     start_at = models.DateTimeField()
     participants = models.ManyToManyField(User)
@@ -106,9 +106,9 @@ class Comment(PolymorphicModel):
         verbose_name_plural = "Комментарии"
 
 
-class LessonComment(Comment):
-    lesson = models.ForeignKey(
-        Lesson, related_name="comments", on_delete=models.CASCADE
+class CourseComment(Comment):
+    course = models.ForeignKey(
+        Course, related_name="comments", on_delete=models.CASCADE
     )
 
     class Meta:
@@ -117,7 +117,7 @@ class LessonComment(Comment):
 
 
 class Ticket(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     amount = models.IntegerField()
 

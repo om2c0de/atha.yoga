@@ -4,48 +4,48 @@ from rest_framework.exceptions import NotFound, PermissionDenied
 
 from core.app.repositories.user_repository import UserRepository
 from core.models import User
-from lessons.app.repositories.comment_repository import LessonCommentRepository
-from lessons.app.repositories.lesson_repository import LessonRepository
-from lessons.models import LessonComment
+from lessons.app.repositories.comment_repository import CourseCommentRepository
+from lessons.app.repositories.lesson_repository import CourseRepository
+from lessons.models import CourseComment
 
 
-class LessonCommentCreate:
-    repository = LessonCommentRepository()
+class CourseCommentCreate:
+    repository = CourseCommentRepository()
     user_repository = UserRepository()
-    lesson_repository = LessonRepository()
+    course_repository = CourseRepository()
 
-    def __init__(self, lesson_id: int, user: User, text: str):
+    def __init__(self, course_id: int, user: User, text: str):
         self.text = text
         self.user = user
-        self.lesson_id = lesson_id
+        self.course_id = course_id
 
     @cached_property
-    def comment(self) -> LessonComment:
-        lesson = self.lesson_repository.find_by_id(id_=self.lesson_id)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
+    def comment(self) -> CourseComment:
+        course = self.course_repository.find_by_id(id_=self.course_id)
+        if not course:
+            raise NotFound(f"Undefined course with id {self.course_id}")
 
-        comment = LessonComment()
+        comment = CourseComment()
         comment.user = self.user
-        comment.lesson = lesson
+        comment.course = course
         comment.text = self.text
 
         return comment
 
-    def create(self) -> LessonComment:
+    def create(self) -> CourseComment:
         self.repository.store(comment=self.comment)
         return self.comment
 
 
-class LessonCommentRemove:
-    repository = LessonCommentRepository()
+class CourseCommentRemove:
+    repository = CourseCommentRepository()
 
     def __init__(self, comment_id: int, user: User):
         self.comment_id = comment_id
         self.user = user
 
     @cached_property
-    def comment(self) -> LessonComment:
+    def comment(self) -> CourseComment:
         comment = self.repository.find_by_id(id_=self.comment_id)
         if not comment:
             raise NotFound(f"Undefined comment with id {self.comment_id}")
@@ -56,6 +56,6 @@ class LessonCommentRemove:
 
         return comment
 
-    def remove(self) -> LessonComment:
+    def remove(self) -> CourseComment:
         self.repository.remove(comment=self.comment)
         return self.comment

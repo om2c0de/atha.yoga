@@ -5,38 +5,38 @@ from elasticsearch_dsl import Q as EQ
 
 from core.app.repositories.base_repository import BaseRepository
 from core.models import User
-from lessons.app.repositories.types import LessonFilterData
-from lessons.documents import LessonDocument
-from lessons.models import Lesson, Ticket
+from lessons.app.repositories.types import CourseFilterData
+from lessons.documents import CourseDocument
+from lessons.models import Course, Ticket
 
 
-class LessonRepository(BaseRepository):
-    model = Lesson
+class CourseRepository(BaseRepository):
+    model = Course
 
-    def store(self, lesson: Lesson) -> None:
-        lesson.save()
+    def store(self, course: Course) -> None:
+        course.save()
 
-    def find_by_id(self, id_: int) -> Optional[Lesson]:
+    def find_by_id(self, id_: int) -> Optional[Course]:
         return self.model.objects.filter(pk=id_).first()
 
-    def find_by_id_teacher(self, id_: int, teacher_id: int) -> Optional[Lesson]:
+    def find_by_id_teacher(self, id_: int, teacher_id: int) -> Optional[Course]:
         return self.model.objects.filter(pk=id_, teacher_id=teacher_id).first()
 
-    def find_user_favorite_lessons(self, user: User) -> QuerySet[Lesson]:
-        return user.favorite_lessons.all()
+    def find_user_favorite_courses(self, user: User) -> QuerySet[Course]:
+        return user.favorite_courses.all()
 
-    def add_user_favorite_lesson(self, user: User, lesson: Lesson) -> None:
-        lesson.favorites.add(user)
+    def add_user_favorite_course(self, user: User, course: Course) -> None:
+        course.favorites.add(user)
 
-    def remove_user_favorite_lesson(self, user: User, lesson: Lesson) -> None:
-        lesson.favorites.remove(user)
+    def remove_user_favorite_course(self, user: User, course: Course) -> None:
+        course.favorites.remove(user)
 
-    def filter(self, data: LessonFilterData) -> QuerySet[Lesson]:
+    def filter(self, data: CourseFilterData) -> QuerySet[Course]:
         base_query = self.model.objects.all()
         filter_query = Q()
         if "query" in data:
             query = (
-                LessonDocument.search()
+                CourseDocument.search()
                 .query(
                     EQ(
                         "multi_match",
@@ -76,14 +76,14 @@ class TicketRepository(BaseRepository):
     def destroy(self, ticket: Ticket) -> None:
         ticket.delete()
 
-    def ticket_for_lesson(self, lesson_id: int, user: User) -> Optional[Ticket]:
-        return self.model.objects.filter(lesson_id=lesson_id, user=user.id).first()
+    def ticket_for_course(self, course_id: int, user: User) -> Optional[Ticket]:
+        return self.model.objects.filter(course_id=course_id, user=user.id).first()
 
-    def ticket_for_lesson_to_update(
-        self, lesson_id: int, user: User
+    def ticket_for_course_to_update(
+            self, course_id: int, user: User
     ) -> Optional[Ticket]:
         return (
             self.model.objects.select_for_update()
-            .filter(lesson_id=lesson_id, user=user.id)
+            .filter(course_id=course_id, user=user.id)
             .first()
         )

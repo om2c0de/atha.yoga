@@ -11,44 +11,44 @@ from core.app.utils.util import setup_resource_attributes
 from core.models import User
 from core.models import UserRoles
 from lessons.app.repositories.lesson_repository import (
-    LessonRepository,
+    CourseRepository,
     TicketRepository,
 )
 from lessons.app.repositories.schedule_repository import ScheduleRepository
-from lessons.app.services.types import LessonCreateData
+from lessons.app.services.types import CourseCreateData
 from lessons.app.services.types import (
-    LessonUpdateData,
+    CourseUpdateData,
     ScheduleCreateData,
 )
-from lessons.models import Lesson, Schedule, Ticket
+from lessons.models import Course, Schedule, Ticket
 
 
-class LessonCreator:
-    repos = LessonRepository()
+class CourseCreator:
+    repos = CourseRepository()
     schedule_repos = ScheduleRepository()
 
-    def __init__(self, data: LessonCreateData, user: User):
+    def __init__(self, data: CourseCreateData, user: User):
         self._data = data
         self._user = user
 
     @cached_property
-    def lesson(self) -> Lesson:
-        lesson = Lesson()
-        lesson.name = self._data["name"]
-        lesson.description = self._data["description"]
-        lesson.lesson_type = self._data["lesson_type"]
-        lesson.link = self._data["link"]
-        lesson.link_info = self._data["link_info"]
-        lesson.level = self._data["level"]
-        lesson.duration = self._data["duration"]
-        lesson.repeat_editing = self._data["repeat_editing"]
-        lesson.start_datetime = self._data["start_datetime"]
-        lesson.deadline_datetime = self._data["deadline_datetime"]
-        lesson.payment = self._data["payment"]
-        lesson.price = self._data["price"]
-        lesson.complexity = self._data["complexity"]
-        lesson.teacher = self._user
-        return lesson
+    def course(self) -> Course:
+        course = Course()
+        course.name = self._data["name"]
+        course.description = self._data["description"]
+        course.course_type = self._data["course_type"]
+        course.link = self._data["link"]
+        course.link_info = self._data["link_info"]
+        course.level = self._data["level"]
+        course.duration = self._data["duration"]
+        course.repeat_editing = self._data["repeat_editing"]
+        course.start_datetime = self._data["start_datetime"]
+        course.deadline_datetime = self._data["deadline_datetime"]
+        course.payment = self._data["payment"]
+        course.price = self._data["price"]
+        course.complexity = self._data["complexity"]
+        course.teacher = self._user
+        return course
 
     @cached_property
     def mapped_schedule(self) -> Dict[int, List[ScheduleCreateData]]:
@@ -61,101 +61,101 @@ class LessonCreator:
         if not self._data["schedule"]:
             return
         schedule_to_create = []
-        cur_date = self.lesson.start_datetime.date()
+        cur_date = self.course.start_datetime.date()
         while cur_date <= (
-            self.lesson.deadline_datetime.date() + datetime.timedelta(days=1)
+                self.course.deadline_datetime.date() + datetime.timedelta(days=1)
         ):
             if cur_date.weekday() in self.mapped_schedule:
-                for lesson_info in self.mapped_schedule[cur_date.weekday()]:
-                    lesson_datetime = datetime.datetime.combine(
-                        date=cur_date, time=lesson_info["start_time"]
+                for course_info in self.mapped_schedule[cur_date.weekday()]:
+                    course_datetime = datetime.datetime.combine(
+                        date=cur_date, time=course_info["start_time"]
                     )
-                    if self.lesson.deadline_datetime < lesson_datetime < now():
+                    if self.course.deadline_datetime < course_datetime < now():
                         continue
                     schedule = Schedule()
-                    schedule.lesson = self.lesson
-                    schedule.start_at = lesson_datetime
+                    schedule.course = self.course
+                    schedule.start_at = course_datetime
                     schedule_to_create.append(schedule)
             cur_date += datetime.timedelta(days=1)
         self.schedule_repos.bulk_create(objs=schedule_to_create)
 
-    def create(self) -> Lesson:
+    def create(self) -> Course:
         if not self._user.has_role(UserRoles.TEACHER):
-            raise PermissionDenied("User must be teacher for create lessons")
-        self.repos.store(lesson=self.lesson)
+            raise PermissionDenied("User must be teacher for create courses")
+        self.repos.store(course=self.course)
         self._create_schedule()
-        return self.lesson
+        return self.course
 
 
-class LessonUpdator:
-    repository = LessonRepository()
+class courseUpdator:
+    repository = CourseRepository()
 
-    def __init__(self, user: User, pk: int, data: LessonUpdateData):
+    def __init__(self, user: User, pk: int, data: CourseUpdateData):
         self._pk = pk
         self._user = user
         self._data = data
 
-    def update(self) -> Lesson:
-        lesson = self.repository.find_by_id_teacher(
+    def update(self) -> Course:
+        course = self.repository.find_by_id_teacher(
             id_=self._pk, teacher_id=self._user.id
         )
-        if not lesson:
-            raise NotFound(f"Undefined lesson with pk {self._pk}")
+        if not course:
+            raise NotFound(f"Undefined course with pk {self._pk}")
         setup_resource_attributes(
-            instance=lesson, validated_data=self._data, fields=list(self._data.keys())
+            instance=course, validated_data=self._data, fields=list(self._data.keys())
         )
-        return lesson
+        return course
 
 
-class FavoriteLessonsWork:
-    repository = LessonRepository()
+class FavoriteCoursesWork:
+    repository = CourseRepository()
 
-    def __init__(self, user: User, lesson_id: int):
+    def __init__(self, user: User, course_id: int):
         self.user = user
-        self.lesson_id = lesson_id
+        self.course_id = course_id
 
     @cached_property
-    def lesson(self) -> Lesson:
-        lesson = self.repository.find_by_id(id_=self.lesson_id)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with id {self.lesson_id}")
-        return lesson
+    def course(self) -> Course:
+        course = self.repository.find_by_id(id_=self.course_id)
+        if not course:
+            raise NotFound(f"Undefined course with id {self.course_id}")
+        return course
 
-    def add(self) -> Lesson:
-        if self.lesson in self.repository.find_user_favorite_lessons(user=self.user):
+    def add(self) -> Course:
+        if self.course in self.repository.find_user_favorite_courses(user=self.user):
             raise ValidationError(
-                f"Lesson with id {self.lesson_id} already in favorites"
+                f"Course with id {self.course_id} already in favorites"
             )
-        self.repository.add_user_favorite_lesson(user=self.user, lesson=self.lesson)
-        return self.lesson
+        self.repository.add_user_favorite_course(user=self.user, course=self.course)
+        return self.course
 
-    def remove(self) -> Lesson:
-        if self.lesson not in self.repository.find_user_favorite_lessons(
-            user=self.user
+    def remove(self) -> Course:
+        if self.course not in self.repository.find_user_favorite_courses(
+                user=self.user
         ):
-            raise NotFound(f"Undefined lesson with id {self.lesson_id} in favorites")
-        self.repository.remove_user_favorite_lesson(user=self.user, lesson=self.lesson)
-        return self.lesson
+            raise NotFound(f"Undefined course with id {self.course_id} in favorites")
+        self.repository.remove_user_favorite_course(user=self.user, course=self.course)
+        return self.course
 
 
 class TicketWorkService:
     repository = TicketRepository()
-    lesson_repository = LessonRepository()
+    course_repository = CourseRepository()
 
-    def _init_ticket(self, lesson_id: int, user: User, amount: int) -> Ticket:
-        lesson = self.lesson_repository.find_by_id(id_=lesson_id)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with id {lesson_id}")
+    def _init_ticket(self, course_id: int, user: User, amount: int) -> Ticket:
+        course = self.course_repository.find_by_id(id_=course_id)
+        if not course:
+            raise NotFound(f"Undefined course with id {course_id}")
         ticket = Ticket()
-        ticket.lesson = lesson
+        ticket.course = course
         ticket.user = user
         ticket.amount = amount
         return ticket
 
-    def buy(self, lesson_id: int, user: User, amount: int) -> Ticket:
-        ticket = self.repository.ticket_for_lesson(lesson_id=lesson_id, user=user)
+    def buy(self, course_id: int, user: User, amount: int) -> Ticket:
+        ticket = self.repository.ticket_for_course(course_id=course_id, user=user)
         if not ticket:
-            ticket = self._init_ticket(lesson_id=lesson_id, user=user, amount=amount)
+            ticket = self._init_ticket(course_id=course_id, user=user, amount=amount)
             self.repository.store(ticket=ticket)
             return ticket
 
@@ -164,7 +164,7 @@ class TicketWorkService:
         return ticket
 
 
-class LessonParticipateService:
+class CourseParticipateService:
     repository = TicketRepository()
     schedule_repository = ScheduleRepository()
 
@@ -173,30 +173,30 @@ class LessonParticipateService:
         self._user = user
 
     @cached_property
-    def scheduled_lesson(self) -> Schedule:
-        scheduled_lesson = self.schedule_repository.find_by_id(id_=self._schedule_id)
-        if not scheduled_lesson:
-            raise NotFound(f"Undefined scheduled_lesson with id {self._schedule_id}")
-        return scheduled_lesson
+    def scheduled_course(self) -> Schedule:
+        scheduled_course = self.schedule_repository.find_by_id(id_=self._schedule_id)
+        if not scheduled_course:
+            raise NotFound(f"Undefined scheduled_course with id {self._schedule_id}")
+        return scheduled_course
 
     def participate(self) -> str:
         participant = self.schedule_repository.is_participant(
-            scheduled_lesson=self.scheduled_lesson, user=self._user
+            scheduled_course=self.scheduled_course, user=self._user
         )
         if participant:
-            return self.scheduled_lesson.lesson.link
+            return self.scheduled_course.course.link
 
         with transaction.atomic():
-            ticket = self.repository.ticket_for_lesson_to_update(
-                lesson_id=self.scheduled_lesson.lesson.id, user=self._user
+            ticket = self.repository.ticket_for_course_to_update(
+                course_id=self.scheduled_course.course.id, user=self._user
             )
             if not ticket or ticket.amount < 1:
-                raise NotFound("You dont have ticket for this lesson")
+                raise NotFound("You dont have ticket for this course")
             ticket.amount = int(ticket.amount) - 1
 
             self.schedule_repository.add_participant(
-                scheduled_lesson=self.scheduled_lesson, user=self._user
+                scheduled_course=self.scheduled_course, user=self._user
             )
 
             self.repository.store(ticket=ticket)
-        return ticket.lesson.link
+        return ticket.course.link

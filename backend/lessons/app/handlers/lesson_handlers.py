@@ -11,127 +11,127 @@ from rest_framework.views import APIView
 from core.app.utils.pagination import paginate
 from core.app.utils.permissions import IsTeacher
 from lessons.app.http.requests.lesson_requests import (
-    LessonFilterRequest,
-    LessonCreateRequest,
-    LessonUpdateRequest,
-    FavoriteLessonAddRemoveRequest,
-    LessonTicketBuyRequest,
-    LessonTicketUseRequest,
+    CourseFilterRequest,
+    CourseCreateRequest,
+    CourseUpdateRequest,
+    FavoriteCourseAddRemoveRequest,
+    CourseTicketBuyRequest,
+    CourseTicketUseRequest,
 )
-from lessons.app.http.resources.lesson_resources import LessonResource
-from lessons.app.repositories.lesson_repository import LessonRepository
+from lessons.app.http.resources.lesson_resources import CourseResource
+from lessons.app.repositories.lesson_repository import CourseRepository
 from lessons.app.services.lesson_service import (
-    LessonCreator,
-    FavoriteLessonsWork,
+    CourseCreator,
+    FavoriteCoursesWork,
     TicketWorkService,
 )
 from lessons.app.services.lesson_service import (
-    LessonUpdator,
-    LessonParticipateService,
+    courseUpdator,
+    CourseParticipateService,
 )
 
 
-class LessonsFilterHandler(GenericAPIView):
-    serializer_class = LessonFilterRequest
+class CourseFilterHandler(GenericAPIView):
+    serializer_class = CourseFilterRequest
 
     def post(self, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data, partial=True)
         data.is_valid(raise_exception=True)
 
-        lessons = LessonRepository().filter(data=data.validated_data)
+        courses = CourseRepository().filter(data=data.validated_data)
 
         return Response(
-            paginate(data=lessons, request=self.request, resource=LessonResource)
+            paginate(data=courses, request=self.request, resource=CourseResource)
         )
 
 
-class LessonRetrieveHandler(APIView):
-    repository = LessonRepository()
+class CourseRetrieveHandler(APIView):
+    repository = CourseRepository()
 
     def get(self, request: Request, pk: int, *args: Any, **kwargs: Any) -> Response:
-        lesson = self.repository.find_by_id(id_=pk)
-        if not lesson:
-            raise NotFound(f"Undefined lesson with pk {pk}")
-        return Response({"data": LessonResource(lesson).data})
+        course = self.repository.find_by_id(id_=pk)
+        if not course:
+            raise NotFound(f"Undefined course with pk {pk}")
+        return Response({"data": CourseResource(course).data})
 
 
 @permission_classes([IsTeacher])
-class LessonCreateHandler(GenericAPIView):
-    serializer_class = LessonCreateRequest
+class CourseCreateHandler(GenericAPIView):
+    serializer_class = CourseCreateRequest
 
     def post(self, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
-        lesson = LessonCreator(
+        course = CourseCreator(
             data=data.validated_data, user=self.request.user
         ).create()
 
-        return Response({"data": LessonResource(lesson).data})
+        return Response({"data": CourseResource(course).data})
 
 
 @permission_classes([IsTeacher])
-class LessonUpdateHandler(GenericAPIView):
-    serializer_class = LessonUpdateRequest
+class CourseUpdateHandler(GenericAPIView):
+    serializer_class = CourseUpdateRequest
 
     def patch(self, request: Request, pk: int, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data, partial=True)
         data.is_valid(raise_exception=True)
 
-        lesson = LessonUpdator(
+        course = courseUpdator(
             user=request.user, data=data.validated_data, pk=pk
         ).update()
 
-        return Response({"data": LessonResource(lesson).data})
+        return Response({"data": CourseResource(course).data})
 
 
 @permission_classes([IsAuthenticated])
-class FavoriteLessonAddHandler(GenericAPIView):
-    serializer_class = FavoriteLessonAddRemoveRequest
+class FavoriteCourseAddHandler(GenericAPIView):
+    serializer_class = FavoriteCourseAddRemoveRequest
 
     def post(self, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
-        lesson = FavoriteLessonsWork(
-            user=self.request.user, lesson_id=data.validated_data["lesson_id"]
+        course = FavoriteCoursesWork(
+            user=self.request.user, course_id=data.validated_data["course_id"]
         ).add()
 
-        return Response({"data": LessonResource(lesson).data})
+        return Response({"data": CourseResource(course).data})
 
 
 @permission_classes([IsAuthenticated])
-class FavoriteLessonRemoveHandler(GenericAPIView):
-    serializer_class = FavoriteLessonAddRemoveRequest
+class FavoriteCourseRemoveHandler(GenericAPIView):
+    serializer_class = FavoriteCourseAddRemoveRequest
 
     def post(self, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
-        lesson = FavoriteLessonsWork(
-            user=self.request.user, lesson_id=data.validated_data["lesson_id"]
+        course = FavoriteCoursesWork(
+            user=self.request.user, course_id=data.validated_data["course_id"]
         ).remove()
 
-        return Response({"data": LessonResource(lesson).data})
+        return Response({"data": CourseResource(course).data})
 
 
 @permission_classes([IsAuthenticated])
-class FavoriteLessonListHandler(APIView):
+class FavoriteCourseListHandler(APIView):
     def get(self, *args: Any, **kwargs: Any) -> Response:
-        lessons = LessonRepository().find_user_favorite_lessons(user=self.request.user)
-        return Response({"data": LessonResource(lessons, many=True).data})
+        courses = CourseRepository().find_user_favorite_courses(user=self.request.user)
+        return Response({"data": CourseResource(courses, many=True).data})
 
 
 @permission_classes([IsAuthenticated])
-class LessonTicketBuyHandler(GenericAPIView):
-    serializer_class = LessonTicketBuyRequest
+class CourseTicketBuyHandler(GenericAPIView):
+    serializer_class = CourseTicketBuyRequest
 
     def post(self, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
         TicketWorkService().buy(
-            lesson_id=data.validated_data["lesson_id"],
+            course_id=data.validated_data["course_id"],
             user=self.request.user,
             amount=data.validated_data["amount"],
         )
@@ -140,15 +140,15 @@ class LessonTicketBuyHandler(GenericAPIView):
 
 
 @permission_classes([IsAuthenticated])
-class LessonTicketUseHandler(GenericAPIView):
-    serializer_class = LessonTicketUseRequest
+class CourseTicketUseHandler(GenericAPIView):
+    serializer_class = CourseTicketUseRequest
 
     def put(self, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data)
         data.is_valid(raise_exception=True)
 
-        link = LessonParticipateService(
+        link = CourseParticipateService(
             schedule_id=data.validated_data["schedule_id"], user=self.request.user
         ).participate()
 
-        return Response({"data": {"lesson_link": link}})
+        return Response({"data": {"course_link": link}})

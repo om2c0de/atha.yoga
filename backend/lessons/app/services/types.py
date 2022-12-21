@@ -3,14 +3,14 @@ from typing import TypedDict, List, Optional
 
 from lessons.models import (
     RepetitionWeekdays,
-    LessonTypes,
-    LessonLevels,
-    LessonPaymentTypes,
-    LessonComplexities,
+    CourseTypes,
+    CourseLevels,
+    CoursePaymentTypes,
+    CourseComplexities,
 )
 
 
-class LessonReviewCreateData(TypedDict):
+class CourseReviewCreateData(TypedDict):
     star_rating: int
     text: str
 
@@ -20,25 +20,25 @@ class ScheduleCreateData(TypedDict):
     start_time: datetime.time
 
 
-class LessonCreateData(TypedDict):
+class CourseCreateData(TypedDict):
     name: str
     description: str
-    lesson_type: LessonTypes
+    course_type: CourseTypes
     link: str
     link_info: str
-    level: LessonLevels
+    level: CourseLevels
     duration: str
     repeat_editing: bool
     start_datetime: datetime.datetime
     deadline_datetime: Optional[datetime.datetime]
-    payment: LessonPaymentTypes
+    payment: CoursePaymentTypes
     price: int
-    complexity: LessonComplexities
+    complexity: CourseComplexities
     schedule: Optional[List[ScheduleCreateData]]
 
 
-class LessonUpdateData(TypedDict):
+class CourseUpdateData(TypedDict):
     description: str
-    lesson_type: LessonTypes
-    level: LessonLevels
-    complexity: LessonComplexities
+    course_type: CourseTypes
+    level: CourseLevels
+    complexity: CourseComplexities
