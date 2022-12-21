@@ -56,7 +56,7 @@ class Course(TimeStampedModel):
     price = models.FloatField(validators=(MinValueValidator(limit_value=0),))
 
     favorites = models.ManyToManyField(
-        User, related_name="favorite_courses", blank=True
+        User, null=True, related_name="favorite_courses", blank=True
     )
 
     class Meta:
@@ -77,7 +77,7 @@ class Review(PolymorphicModel, TimeStampedModel):
 
 
 class CourseReview(Review):
-    course = models.ForeignKey(Course, related_name="reviews", on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, null=True, related_name="reviews", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Отзыв о занятии"
@@ -86,7 +86,7 @@ class CourseReview(Review):
 
 class Lesson(TimeStampedModel):
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name="lesson"
+        Course, on_delete=models.CASCADE, null=True, related_name="lessons"
     )
     start_at = models.DateTimeField()
     participants = models.ManyToManyField(User)
@@ -108,7 +108,7 @@ class Comment(PolymorphicModel):
 
 class CourseComment(Comment):
     course = models.ForeignKey(
-        Course, related_name="comments", on_delete=models.CASCADE
+        Course, null=True, related_name="comments", on_delete=models.CASCADE
     )
 
     class Meta:
