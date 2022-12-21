@@ -117,7 +117,7 @@ class CourseComment(Comment):
 
 
 class Ticket(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, null=True, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     amount = models.IntegerField()
 
