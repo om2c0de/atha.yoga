@@ -25,7 +25,7 @@ class CourseFilterRequest(UnimplementedSerializer):
         return attrs
 
 
-class ScheduleCreateRequest(UnimplementedSerializer):
+class LessonCreateRequest(UnimplementedSerializer):
     weekday = serializers.ChoiceField(choices=RepetitionWeekdays.choices)
     start_time = serializers.TimeField()
 
@@ -44,7 +44,7 @@ class CourseCreateRequest(UnimplementedSerializer):
     deadline_datetime = serializers.DateTimeField(allow_null=True)
     payment = serializers.ChoiceField(choices=CoursePaymentTypes.choices)
     price = serializers.IntegerField(min_value=0)
-    schedule = ScheduleCreateRequest(many=True, allow_null=True)
+    lesson = LessonCreateRequest(many=True, allow_null=True)
 
 
 class CourseUpdateRequest(UnimplementedSerializer):
@@ -64,4 +64,4 @@ class CourseTicketBuyRequest(UnimplementedSerializer):
 
 
 class CourseTicketUseRequest(UnimplementedSerializer):
-    schedule_id = serializers.IntegerField(min_value=1)
+    lesson_id = serializers.IntegerField(min_value=1)

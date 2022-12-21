@@ -148,7 +148,7 @@ class CourseTicketUseHandler(GenericAPIView):
         data.is_valid(raise_exception=True)
 
         link = CourseParticipateService(
-            schedule_id=data.validated_data["schedule_id"], user=self.request.user
+            lesson_id=data.validated_data["lesson_id"], user=self.request.user
         ).participate()
 
         return Response({"data": {"course_link": link}})

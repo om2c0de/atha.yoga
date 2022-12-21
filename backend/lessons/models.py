@@ -84,9 +84,9 @@ class CourseReview(Review):
         verbose_name_plural = "Отзывы о занятии"
 
 
-class Schedule(TimeStampedModel):
+class Lesson(TimeStampedModel):
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name="schedules"
+        Course, on_delete=models.CASCADE, related_name="lesson"
     )
     start_at = models.DateTimeField()
     participants = models.ManyToManyField(User)

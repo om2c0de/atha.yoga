@@ -1,11 +1,11 @@
 from rest_framework.serializers import ModelSerializer
 
-from lessons.models import Course, Schedule
+from lessons.models import Course, Lesson
 
 
-class ScheduleResource(ModelSerializer):
+class LessonResource(ModelSerializer):
     class Meta:
-        model = Schedule
+        model = Lesson
         fields = [
             "id",
             "course",
@@ -14,7 +14,7 @@ class ScheduleResource(ModelSerializer):
 
 
 class CourseResource(ModelSerializer):
-    schedules = ScheduleResource(many=True)
+    lesson = LessonResource(many=True)
 
     class Meta:
         model = Course
@@ -33,5 +33,5 @@ class CourseResource(ModelSerializer):
             "repeat_editing",
             "payment",
             "price",
-            "schedules",
+            "lesson",
         ]

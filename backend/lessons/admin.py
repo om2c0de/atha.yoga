@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Course, Schedule, CourseComment, CourseReview
+from .models import Course, Lesson, CourseComment, CourseReview
 
 
 @admin.register(Course)
@@ -36,8 +36,8 @@ class CourseAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
 
 
-@admin.register(Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "course",
