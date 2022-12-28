@@ -37,7 +37,7 @@ class LessonCreateRequest(UnimplementedSerializer):
 class CourseUpdateRequest(UnimplementedSerializer):
     description = serializers.CharField(max_length=150)
     complexity = serializers.ChoiceField(choices=CourseComplexities.choices)
-    level = serializers.ChoiceField(choices=CourseLevels.choices)
+    level = serializers.MultipleChoiceField(choices=CourseLevels.choices)
     duration = serializers.DurationField(min_value=datetime.timedelta(minutes=1))
 
 

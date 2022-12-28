@@ -57,7 +57,7 @@ class Course(TimeStampedModel):
     name = models.CharField(max_length=64)
     description = models.TextField()
     course_type = models.CharField(max_length=30, choices=CourseTypes.choices)
-    level = models.CharField(max_length=30, choices=CourseLevels.choices)
+    level = models.CharField(max_length=30)
     single = models.BooleanField(default=False)
     duration = models.DurationField()
     start_datetime = models.DateTimeField()
