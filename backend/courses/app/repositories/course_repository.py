@@ -1,24 +1,32 @@
 from typing import Optional
 
-from django.db.models import QuerySet, Q, F
+from django.db.models import QuerySet, Q, F, Prefetch, Count, Exists, OuterRef, Avg
 from elasticsearch_dsl import Q as EQ
 from rest_framework.exceptions import NotFound
 
 from core.app.repositories.base_repository import BaseRepository
-from core.models import User
+from core.models import User, QuestionnaireTeacher, QuestionnaireTeacherStatuses
 from courses.app.repositories.types import CourseFilterData
 from courses.documents import CourseDocument
-from courses.models import Course
+from courses.models import Course, Lesson
 
 
 class CourseRepository(BaseRepository):
     model = Course
 
+    def __init__(self, user: User = None):
+        self.user = user
+
     def store(self, course: Course) -> None:
         course.save()
 
-    def find_by_id(self, id_: int, raise_exception: bool = False) -> Optional[Course]:
-        course = self.model.objects.filter(pk=id_).first()
+    def find_by_id(
+        self, id_: int, raise_exception: bool = False, fetch_rels: bool = False
+    ) -> Optional[Course]:
+        query = self.model.objects.filter(pk=id_)
+        if fetch_rels:
+            query = self.fetch_relations(queryset=query)
+        course = query.first()
         if not course and raise_exception:
             raise NotFound(f"Undefined course with id {id_}")
         return course
@@ -69,3 +77,49 @@ class CourseRepository(BaseRepository):
             )
             filter_query &= Q(end_datetime__lte=data["end_datetime"])
         return base_query.filter(filter_query).order_by("-id")
+
+    def fetch_relations(self, queryset: QuerySet[Course]) -> QuerySet[Course]:
+        queryset = (
+            queryset.select_related("teacher")
+            .prefetch_related(
+                Prefetch(
+                    "lessons_set",
+                    queryset=Lesson.objects.filter(
+                        pk__in=Lesson.objects.order_by("id").values("id")[:15]
+                    ),
+                    to_attr="lessons",
+                ),
+                Prefetch(
+                    "teacher",
+                    queryset=User.objects.filter(
+                        pk=OuterRef("teacher_id")
+                    ).prefetch_related(
+                        Prefetch(
+                            "teacher_profiles",
+                            queryset=QuestionnaireTeacher.objects.filter(
+                                user_id=OuterRef("id"),
+                                status=QuestionnaireTeacherStatuses.ACCEPTED,
+                            ),
+                        )
+                    ),
+                ),
+            )
+            .annotate(
+                reviews_count=Count("reviews"),
+                comments_count=Count("comments"),
+                rate=Avg("reviews__star_rating"),
+            )
+        )
+        if self.user and self.user.id:
+            queryset = queryset.annotate(
+                participant=Exists(
+                    Lesson.objects.filter(
+                        course_id=OuterRef("id"), participants__id=self.user.id
+                    )
+                ),
+                favorite=Exists(
+                    Course.objects.filter(pk=OuterRef("id"), favorites__id=self.user.id)
+                ),
+            )
+
+        return queryset

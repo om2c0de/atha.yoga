@@ -12,9 +12,7 @@ class LessonRepository(BaseRepository):
     model = Lesson
 
     def fetch_relations(self, lessons: QuerySet[Lesson]) -> QuerySet[Lesson]:
-        return lessons.prefetch_related("participants").annotate(
-            end_at=F("start_at") + F("course__duration")
-        )
+        return lessons.annotate(end_at=F("start_at") + F("course__duration"))
 
     def bulk_create(self, objs: List[Lesson]) -> None:
         self.model.objects.bulk_create(objs)

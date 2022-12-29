@@ -22,7 +22,12 @@ from courses.app.http.requests.course_requests import (
     CourseTicketBuyRequest,
     CourseTicketUseRequest,
 )
-from courses.app.http.resources.course_resources import CourseResource, LessonResource
+from courses.app.http.resources.context import BaseCourseResourceContext
+from courses.app.http.resources.course_resources import (
+    CourseResource,
+    LessonResource,
+    CourseCardResource,
+)
 from courses.app.repositories.course_repository import CourseRepository
 from courses.app.repositories.lesson_repository import LessonRepository
 from courses.app.repositories.transaction_repository import TicketTransactionRepository
@@ -44,25 +49,25 @@ class CourseFilterHandler(GenericAPIView):
         data = self.serializer_class(data=self.request.data, partial=True)
         data.is_valid(raise_exception=True)
 
-        courses = CourseRepository().filter(data=data.validated_data)
+        repository = CourseRepository(user=self.request.user)
+        courses = repository.fetch_relations(
+            queryset=repository.filter(data=data.validated_data)
+        )
 
         return Response(
-            paginate(data=courses, request=self.request, resource=CourseResource)
+            paginate(data=courses, request=self.request, resource=CourseCardResource)
         )
 
 
 class CourseRetrieveHandler(APIView):
-    repository = CourseRepository()
-
     @extend_schema(responses=OpenApiTypes.OBJECT)
     def get(self, request: Request, pk: int, *args: Any, **kwargs: Any) -> Response:
-        course = self.repository.find_by_id(id_=pk)
-        if not course:
-            raise NotFound(f"Undefined course with pk {pk}")
+        repository = CourseRepository(user=request.user)
+        course = repository.find_by_id(id_=pk, raise_exception=True, fetch_rels=True)
         return Response(
             {
-                "data": CourseResource(
-                    course, context={"user": self.request.user.pk}
+                "data": CourseCardResource(
+                    course, context=BaseCourseResourceContext(user=self.request.user)
                 ).data
             }
         )
@@ -83,7 +88,7 @@ class CourseCreateHandler(GenericAPIView):
         return Response(
             {
                 "data": CourseResource(
-                    course, context={"user": self.request.user.pk}
+                    course, context=BaseCourseResourceContext(user=self.request.user)
                 ).data
             }
         )
@@ -104,7 +109,7 @@ class CourseUpdateHandler(GenericAPIView):
         return Response(
             {
                 "data": CourseResource(
-                    course, context={"user": self.request.user.pk}
+                    course, context=BaseCourseResourceContext(user=self.request.user)
                 ).data
             }
         )
@@ -125,7 +130,7 @@ class FavoriteCourseAddHandler(GenericAPIView):
         return Response(
             {
                 "data": CourseResource(
-                    course, context={"user": self.request.user.pk}
+                    course, context=BaseCourseResourceContext(user=self.request.user)
                 ).data
             }
         )
@@ -146,7 +151,7 @@ class FavoriteCourseRemoveHandler(GenericAPIView):
         return Response(
             {
                 "data": CourseResource(
-                    course, context={"user": self.request.user.pk}
+                    course, context=BaseCourseResourceContext(user=self.request.user)
                 ).data
             }
         )
@@ -160,7 +165,9 @@ class FavoriteCourseListHandler(APIView):
         return Response(
             {
                 "data": CourseResource(
-                    courses, context={"user": self.request.user.pk}, many=True
+                    courses,
+                    context=BaseCourseResourceContext(user=self.request.user),
+                    many=True,
                 ).data
             }
         )

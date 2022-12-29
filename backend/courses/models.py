@@ -140,7 +140,9 @@ class LessonStatuses(models.TextChoices):
 
 
 class Lesson(TimeStampedModel):
-    course = models.ForeignKey(Course, related_name="lessons", on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course, related_name="lessons_set", on_delete=models.CASCADE
+    )
     start_at = models.DateTimeField()
     participants = models.ManyToManyField(User)
     status = models.CharField(

@@ -213,10 +213,6 @@ LOGGING = {
             "propagate": True,
             "level": "INFO",
         },
-        "": {
-            "handlers": ["console"],
-            "level": "INFO",
-        },
     },
 }
 
