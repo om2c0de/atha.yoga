@@ -50,7 +50,7 @@ class CourseCreator:
         course.course_type = self._data["course_type"]
         course.link = self._data["link"]
         course.link_info = self._data["link_info"]
-        course.level = ' '.join(self._data["level"])
+        course.level = list(self._data["level"])
         course.duration = self._data["duration"]
         course.repeat_editing = self._data["repeat_editing"]
         course.start_datetime = self._data["start_datetime"]

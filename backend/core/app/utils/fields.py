@@ -66,5 +66,4 @@ class JSONParsedField(models.JSONField):
             result_value = [asdict(i) if is_dataclass(i) else i for i in value]
         elif not isinstance(value, dict):
             result_value = asdict(value)
-        print(type(value))
         return json.dumps(result_value, cls=self.encoder, default=str)
