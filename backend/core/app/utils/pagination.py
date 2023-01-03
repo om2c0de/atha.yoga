@@ -3,14 +3,15 @@ from typing import Optional, Type
 from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import QuerySet
-from rest_framework.request import Request
 from rest_framework.serializers import Serializer
+
+from core.app.utils.request import APIRequest
 
 
 def paginate(
     resource: Type[Serializer],
     data: QuerySet,
-    request: Request,
+    request: APIRequest,
     context: Optional[dict] = None,
 ) -> dict:
     """

@@ -6,7 +6,6 @@ from rest_framework.decorators import permission_classes
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -29,12 +28,13 @@ from core.app.services.user_services import (
     UserResetPass,
     UserProfileUpdator,
 )
+from core.app.utils.request import APIRequest
 
 
 class UserRegisterHandler(GenericAPIView):
     serializer_class = UserRegisterRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def post(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
@@ -45,7 +45,7 @@ class UserRegisterHandler(GenericAPIView):
 class UserRegisterConfirmHandler(GenericAPIView):
     serializer_class = UserConfirmRegisterRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def post(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
@@ -58,7 +58,7 @@ class UserRegisterConfirmHandler(GenericAPIView):
 class UserLoginHandler(GenericAPIView):
     serializer_class = UserLoginRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def post(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
@@ -71,7 +71,7 @@ class UserLoginHandler(GenericAPIView):
 class UserChangePassHandler(GenericAPIView):
     serializer_class = UserChangePassRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def post(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
@@ -84,7 +84,7 @@ class UserChangePassHandler(GenericAPIView):
 class UserSendPwdResetMailHandler(GenericAPIView):
     serializer_class = UserSendPwdResetMailRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def post(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
@@ -95,7 +95,7 @@ class UserSendPwdResetMailHandler(GenericAPIView):
 class UserResetPassHandler(GenericAPIView):
     serializer_class = UserResetPassRequest
 
-    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def post(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=request.data)
         data.is_valid(raise_exception=True)
 
@@ -123,7 +123,7 @@ class UserProfileHandler(APIView):
     repository = UserRepository()
 
     @extend_schema(responses=OpenApiTypes.OBJECT)
-    def get(self, request: Request, pk: int, *args: Any, **kwargs: Any) -> Response:
+    def get(self, request: APIRequest, pk: int, *args: Any, **kwargs: Any) -> Response:
         user = self.repository.find_by_id(id_=pk, fetch_rels=True)
         if not user:
             raise NotFound(f"Undefined user with pk {pk}")
@@ -136,10 +136,8 @@ class UserProfileUpdateHandler(GenericAPIView):
     serializer_class = UserProfileUpdateRequest
 
     @extend_schema(responses=OpenApiTypes.OBJECT)
-    def patch(self, *args: Any, **kwargs: Any) -> Response:
+    def patch(self, request: APIRequest, *args: Any, **kwargs: Any) -> Response:
         data = self.serializer_class(data=self.request.data, partial=True)
         data.is_valid(raise_exception=True)
-        user = UserProfileUpdator(
-            user=self.request.user, data=data.validated_data
-        ).update()
+        user = UserProfileUpdator(user=request.user, data=data.validated_data).update()
         return Response({"data": UserResource(user).data})
