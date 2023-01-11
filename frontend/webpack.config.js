@@ -155,6 +155,7 @@ module.exports = {
   },
   ...envConfig.isDev && { devtool: 'source-map' },
   devServer: {
+    allowedHosts: 'all',
     historyApiFallback: true,
   },
 };

@@ -1,0 +1,21 @@
+{
+  "name": "frontend-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx cypress run --headless"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "cypress": "^12.3.0",
+    "cypress-mochawesome-reporter": "^3.2.3",
+    "cypress-slow-down": "^1.2.1",
+    "eslint-plugin-cypress": "^2.12.1"
+  },
+  "dependencies": {
+    "wait-on": "^7.0.1"
+  }
+}

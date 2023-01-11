@@ -20,6 +20,18 @@ services:
     ports:
       - "${FRONTEND_PORT}:8080"
 
+  cypress:
+    build: frontend/tests/
+    container_name: "cypress-${CONTAINER_SUFFIX}"
+    environment:
+      - "CYPRESS_baseUrl=http://frontend-${CONTAINER_SUFFIX}:8080"
+      - "BRANCH_NAME=${CONTAINER_SUFFIX}"
+    volumes:
+      - ./frontend/tests/cypress/reports/:/e2e/cypress/reports/
+      - ./frontend/tests/cypress/videos/:/e2e/cypress/videos/
+    depends_on:
+      - frontend
+
   db:
     image: postgres:14
     container_name: "db-${CONTAINER_SUFFIX}"

@@ -16,4 +16,8 @@ redis
 .mypy_cache
 frontend/node_modules
 frontend/db.json
+frontend/tests/cypress/reports
+frontend/tests/cypress/screenshots
+frontend/tests/cypress/videos
+frontend/tests/node_modules
 backend/core/logs/
