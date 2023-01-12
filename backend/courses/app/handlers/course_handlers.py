@@ -26,7 +26,7 @@ from courses.app.http.resources.context import BaseCourseResourceContext
 from courses.app.http.resources.course_resources import (
     CourseResource,
     LessonResource,
-    CourseCardResource,
+    CourseCardResource, BaseCourseResource,
 )
 from courses.app.repositories.course_repository import CourseRepository
 from courses.app.repositories.lesson_repository import LessonRepository
@@ -111,8 +111,8 @@ class BaseCourseUpdateHandler(GenericAPIView):
 
         return Response(
             {
-                "data": CourseResource(
-                    course, context=BaseCourseResourceContext(user=self.request.user)
+                "data": BaseCourseResource(
+                    course
                 ).data
             }
         )

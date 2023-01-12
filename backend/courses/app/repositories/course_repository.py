@@ -139,5 +139,5 @@ class BaseCourseRepository(BaseRepository):
 
     def find_by_id_teacher(self, id_: int, teacher_id: int) -> Optional[BaseCourse]:
         return self.model.objects.filter(
-            pk=id_, base_course__teacher_id=teacher_id
+            pk=id_, teacher_id=teacher_id
         ).first()
